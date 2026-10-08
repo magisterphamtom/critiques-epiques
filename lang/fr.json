@@ -1,0 +1,89 @@
+{
+  "CRITEPIQ": {
+    "Title": {
+      "attackCrit": "Coup critique !",
+      "crit": "Réussite critique !",
+      "attackFumble": "Échec critique !",
+      "fumble": "Échec critique !",
+      "deathCrit": "Sursaut de vie !",
+      "deathFumble": "Le voile s'assombrit…"
+    },
+    "Type": {
+      "attack": "Attaque",
+      "skill": "Compétence",
+      "save": "Jet de sauvegarde",
+      "ability": "Test de caractéristique",
+      "check": "Test",
+      "tool": "Outil",
+      "death": "Jet contre la mort",
+      "concentration": "Concentration",
+      "initiative": "Initiative"
+    },
+    "Settings": {
+      "EnableCritical": {
+        "Name": "Effet sur les réussites critiques",
+        "Hint": "Affiche l'effet doré quand un d20 fait un 20 naturel (ou la valeur critique de l'arme)."
+      },
+      "EnableFumble": {
+        "Name": "Effet sur les échecs critiques",
+        "Hint": "Affiche l'effet sombre quand un d20 fait un 1 naturel."
+      },
+      "RollTypes": {
+        "Name": "Jets concernés",
+        "Hint": "Quels jets de d20 déclenchent l'effet.",
+        "All": "Tous les jets de d20",
+        "Attack": "Attaques uniquement",
+        "AttackSave": "Attaques et jets de sauvegarde"
+      },
+      "Audience": {
+        "Name": "Qui voit l'effet",
+        "Hint": "Les jets privés ou à l'aveugle ne déclenchent l'effet que chez ceux qui peuvent les voir.",
+        "Visible": "Tous ceux qui voient le jet",
+        "Roller": "Seulement la personne qui lance"
+      },
+      "IncludeNpc": {
+        "Name": "Inclure les PNJ",
+        "Hint": "Décochez pour ne déclencher l'effet que sur les jets des personnages des joueurs."
+      },
+      "CriticalSound": {
+        "Name": "Son de la réussite critique",
+        "Hint": "Fichier audio à jouer. Laissez vide pour le carillon intégré."
+      },
+      "FumbleSound": {
+        "Name": "Son de l'échec critique",
+        "Hint": "Fichier audio à jouer. Laissez vide pour le glas intégré."
+      },
+      "ShowEffects": {
+        "Name": "Afficher les effets de critique",
+        "Hint": "Réglage propre à chaque joueur."
+      },
+      "Volume": {
+        "Name": "Volume des effets",
+        "Hint": "Multiplié par le volume de l'interface de Foundry. 0 coupe le son."
+      },
+      "Duration": {
+        "Name": "Durée de l'effet (secondes)",
+        "Hint": "Un clic sur l'effet le ferme plus tôt."
+      },
+      "Shake": {
+        "Name": "Secousse sur les échecs critiques",
+        "Hint": "Fait trembler la scène quand un 1 naturel tombe."
+      },
+      "ReducedMotion": {
+        "Name": "Mouvements réduits",
+        "Hint": "Moins d'animations et de particules, pour les machines modestes ou les personnes sensibles au mouvement."
+      },
+      "Test": {
+        "Name": "Tester les effets",
+        "Label": "Tester",
+        "Hint": "Ouvre une fenêtre pour voir les deux effets sans lancer de dés."
+      }
+    },
+    "Test": {
+      "Window": "Critiques Épiques — Test",
+      "Text": "Seul vous voyez ces aperçus : rien n'est envoyé aux autres joueurs.",
+      "Critical": "Réussite critique",
+      "Fumble": "Échec critique"
+    }
+  }
+}

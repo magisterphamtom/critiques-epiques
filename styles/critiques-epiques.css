@@ -1,0 +1,282 @@
+/* ==========================================================================
+   Critiques Épiques — magisterphamtom
+   Polices : Cinzel, Cinzel Decorative, Noto Sans Runic (SIL Open Font License)
+   ========================================================================== */
+
+@font-face { font-family: "CE Cinzel Decorative"; font-weight: 700; font-display: swap;
+  src: url("../fonts/cinzel-decorative-latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "CE Cinzel Decorative"; font-weight: 900; font-display: swap;
+  src: url("../fonts/cinzel-decorative-latin-900-normal.woff2") format("woff2"); }
+@font-face { font-family: "CE Cinzel"; font-weight: 400; font-display: swap;
+  src: url("../fonts/cinzel-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "CE Cinzel"; font-weight: 700; font-display: swap;
+  src: url("../fonts/cinzel-latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "CE Runic"; font-weight: 400; font-display: swap;
+  src: url("../fonts/noto-sans-runic-runic-400-normal.woff2") format("woff2"); }
+
+.critiques-epiques {
+  --ce-dur: 3.5s;
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  pointer-events: none;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  animation: ce-overlay var(--ce-dur) ease-in-out forwards;
+  font-family: "CE Cinzel", "Cinzel", Georgia, serif;
+}
+.critiques-epiques > * { grid-area: 1 / 1; }
+
+@keyframes ce-overlay {
+  0% { opacity: 0; }
+  6% { opacity: 1; }
+  82% { opacity: 1; }
+  100% { opacity: 0; visibility: hidden; }
+}
+
+/* ---------- Vignette ---------- */
+.ce-vignette { position: absolute; inset: 0; }
+.ce-critical .ce-vignette {
+  background:
+    radial-gradient(ellipse at center, rgba(255, 214, 120, 0.42) 0%, rgba(255, 170, 60, 0.16) 30%, rgba(30, 16, 0, 0.0) 55%),
+    radial-gradient(ellipse at center, transparent 45%, rgba(18, 10, 0, 0.78) 100%);
+}
+.ce-fumble .ce-vignette {
+  background:
+    radial-gradient(ellipse at center, rgba(120, 10, 25, 0.38) 0%, rgba(40, 0, 10, 0.55) 40%, rgba(5, 0, 2, 0.9) 100%);
+  animation: ce-pulse-dark 1.6s ease-in-out infinite alternate;
+}
+@keyframes ce-pulse-dark { to { filter: brightness(1.25) saturate(1.2); } }
+
+/* ---------- Réussite : rayons divins + éclair ---------- */
+.ce-rays {
+  position: absolute;
+  width: 220vmax; height: 220vmax;
+  left: 50%; top: 50%;
+  margin: -110vmax 0 0 -110vmax;
+  background: repeating-conic-gradient(from 0deg,
+    rgba(255, 236, 170, 0.0) 0deg 6deg,
+    rgba(255, 220, 130, 0.24) 8deg 10deg,
+    rgba(255, 236, 170, 0.0) 12deg 18deg);
+  -webkit-mask-image: radial-gradient(circle, #000 0%, rgba(0, 0, 0, 0.6) 18%, transparent 42%);
+          mask-image: radial-gradient(circle, #000 0%, rgba(0, 0, 0, 0.6) 18%, transparent 42%);
+  mix-blend-mode: screen;
+  animation: ce-spin 14s linear infinite, ce-rays-in 0.9s ease-out both;
+}
+@keyframes ce-rays-in { from { transform: scale(0.2); opacity: 0; } }
+.ce-flash {
+  position: absolute; inset: 0;
+  background: radial-gradient(circle, #fffbe6 0%, rgba(255, 236, 170, 0.7) 25%, transparent 60%);
+  mix-blend-mode: screen;
+  animation: ce-flash 0.8s ease-out forwards;
+}
+@keyframes ce-flash { 0% { opacity: 0; } 12% { opacity: 1; } 100% { opacity: 0; } }
+
+/* ---------- Échec : fissures ---------- */
+.ce-cracks {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  fill: none;
+  stroke: #12030a;
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 0 4px rgba(255, 40, 30, 0.95)) drop-shadow(0 0 14px rgba(160, 0, 20, 0.7));
+}
+.ce-cracks path {
+  stroke-dasharray: 1400;
+  stroke-dashoffset: 1400;
+  animation: ce-crack 0.55s cubic-bezier(.2, .9, .3, 1) forwards;
+  animation-delay: calc(0.12s + var(--i) * 0.025s);
+}
+@keyframes ce-crack { to { stroke-dashoffset: 0; } }
+
+/* ---------- Scène centrale ---------- */
+.ce-stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: min(92vw, 1100px);
+}
+.ce-stage > * { grid-area: 1 / 1; }
+
+.ce-rings { position: relative; width: min(52vmin, 500px); aspect-ratio: 1; transform: translateY(-9vmin); }
+.ce-ring { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.ce-ring-text { font-family: "CE Runic", "Noto Sans Runic", serif; font-size: 26px; letter-spacing: 2px; }
+.ce-ring-line { fill: none; stroke-width: 2; }
+.ce-ring-a { animation: ce-spin 22s linear infinite, ce-ring-in 1s ease-out both; }
+.ce-ring-b { animation: ce-spin-rev 16s linear infinite, ce-ring-in 1.2s ease-out both; }
+.ce-ring-b .ce-ring-text { font-size: 20px; }
+@keyframes ce-spin { to { rotate: 360deg; } }
+@keyframes ce-spin-rev { to { rotate: -360deg; } }
+@keyframes ce-ring-in { from { opacity: 0; scale: 0.4; } }
+
+.ce-critical .ce-ring-text { fill: #ffe7a3; filter: drop-shadow(0 0 6px rgba(255, 200, 80, 0.95)); }
+.ce-critical .ce-ring-line { stroke: rgba(255, 220, 140, 0.75); filter: drop-shadow(0 0 4px rgba(255, 200, 80, 0.9)); }
+.ce-fumble .ce-ring-text { fill: #ff5a48; filter: drop-shadow(0 0 6px rgba(255, 30, 20, 0.9)); opacity: 0.85; }
+.ce-fumble .ce-ring-line { stroke: rgba(200, 30, 40, 0.7); }
+.ce-fumble .ce-rings { animation: ce-flicker 0.18s steps(2) 6 0.2s; }
+@keyframes ce-flicker { 50% { opacity: 0.35; } }
+
+/* ---------- Dé ---------- */
+.ce-die { width: min(26vmin, 240px); transform: translateY(-9vmin); }
+.ce-die-svg { width: 100%; height: auto; overflow: visible; }
+.ce-die-face { font-family: "Palatino Linotype", "Book Antiqua", Palatino, "Times New Roman", serif; font-weight: 700; font-size: 52px; font-variant-numeric: lining-nums; }
+.ce-critical .ce-die { animation: ce-die-crit 1.1s cubic-bezier(.2, 1.4, .4, 1) both; }
+.ce-critical .ce-die-svg { filter: drop-shadow(0 0 18px rgba(255, 210, 100, 0.95)) drop-shadow(0 0 50px rgba(255, 170, 40, 0.6)); }
+.ce-critical .ce-die-face { fill: #5a3200; }
+@keyframes ce-die-crit {
+  0% { transform: translateY(-9vmin) scale(0) rotate(-540deg); }
+  100% { transform: translateY(-9vmin) scale(1) rotate(0deg); }
+}
+.ce-fumble .ce-die { animation: ce-die-fumble 0.9s cubic-bezier(.5, 0, .7, .4) both; }
+.ce-fumble .ce-die-svg { filter: drop-shadow(0 0 14px rgba(255, 30, 20, 0.8)); }
+.ce-fumble .ce-die-face { fill: #ff3b30; filter: drop-shadow(0 0 4px #ff0000); }
+.ce-die-crack { fill: none; stroke: #ffb199; stroke-width: 2.5; stroke-dasharray: 200; stroke-dashoffset: 200;
+  animation: ce-crack 0.4s ease-out 0.75s forwards; filter: drop-shadow(0 0 3px #ff2a1a); }
+@keyframes ce-die-fumble {
+  0% { transform: translateY(-60vh) rotate(25deg); }
+  70% { transform: translateY(-9vmin) rotate(-4deg); }
+  78% { transform: translateY(-7vmin) rotate(3deg); }
+  86% { transform: translateY(-9vmin) rotate(-1deg); }
+  100% { transform: translateY(-9vmin) rotate(0deg); }
+}
+
+/* ---------- Titre et bandeau ---------- */
+.ce-banner {
+  display: flex; flex-direction: column; align-items: center; gap: 1.2vmin;
+  transform: translateY(24vmin);
+  text-align: center;
+}
+.ce-title {
+  position: relative;
+  font-family: "CE Cinzel Decorative", "Cinzel Decorative", Georgia, serif;
+  font-weight: 900;
+  font-size: clamp(40px, 7.4vw, 124px);
+  line-height: 1;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  font-variant-ligatures: none;
+  font-feature-settings: "liga" 0, "dlig" 0, "clig" 0, "calt" 0, "hlig" 0;
+  -webkit-background-clip: text;
+          background-clip: text;
+  color: transparent;
+}
+.ce-critical .ce-title {
+  background-image: linear-gradient(180deg, #fffbe8 0%, #ffe28a 38%, #c98a1c 52%, #8c5810 60%, #f6d47c 82%, #fff3c4 100%);
+  filter: drop-shadow(0 2px 0 #4a2a00) drop-shadow(0 0 18px rgba(255, 196, 80, 0.85)) drop-shadow(0 0 48px rgba(255, 150, 30, 0.45));
+  animation: ce-title-crit 0.9s cubic-bezier(.2, 1.3, .4, 1) 0.25s both;
+}
+.ce-critical .ce-title::after {
+  /* reflet qui balaie les lettres */
+  content: attr(data-text);
+  position: absolute; inset: 0;
+  background: linear-gradient(110deg, transparent 35%, rgba(255, 255, 255, 0.95) 50%, transparent 65%) -150% 0 / 250% 100% no-repeat;
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  animation: ce-shine 1.4s ease-in-out 1s both;
+}
+@keyframes ce-title-crit { from { opacity: 0; transform: scale(0.3); letter-spacing: 0.5em; } }
+@keyframes ce-shine { to { background-position: 250% 0; } }
+
+.ce-fumble .ce-title {
+  /* Cinzel classique : le H décoratif se confond avec le E dans « ÉCHEC ». */
+  font-family: "CE Cinzel", "Cinzel", Georgia, serif;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  background-image: linear-gradient(180deg, #ffb3a1 0%, #ff4434 30%, #a00c1c 55%, #3f0310 100%);
+  filter: drop-shadow(0 3px 0 #120006) drop-shadow(0 0 16px rgba(255, 20, 10, 0.75)) drop-shadow(0 0 40px rgba(120, 0, 30, 0.8));
+  animation: ce-title-fumble 0.7s cubic-bezier(.6, 0, .4, 1) 0.45s both, ce-jitter 0.08s linear 1.15s 6;
+}
+@keyframes ce-title-fumble {
+  0% { opacity: 0; transform: scale(2.4); filter: blur(12px); }
+  70% { opacity: 1; transform: scale(0.96); filter: blur(0) drop-shadow(0 0 16px rgba(255, 20, 10, 0.75)); }
+  100% { transform: scale(1); }
+}
+@keyframes ce-jitter { 50% { transform: translate(2px, -1px) skewX(-2deg); } }
+
+/* Bandeau parchemin (nom du personnage + type de jet) */
+.ce-ribbon {
+  position: relative;
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  padding: 0.7em 3.2em 0.75em;
+  font-size: clamp(14px, 1.6vw, 24px);
+  animation: ce-ribbon 0.6s ease-out 0.8s both;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 1.4em) 50%, 100% 100%, 0 100%, 1.4em 50%);
+}
+.ce-name { font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+.ce-sub { font-size: 0.78em; letter-spacing: 0.04em; opacity: 0.9; }
+@keyframes ce-ribbon { from { opacity: 0; transform: scaleX(0.2); } }
+.ce-critical .ce-ribbon {
+  color: #3d2304;
+  background: linear-gradient(180deg, #f8e7bf 0%, #e9cf96 55%, #d4b06c 100%);
+  box-shadow: inset 0 0 0 2px rgba(120, 76, 14, 0.55);
+}
+.ce-fumble .ce-ribbon {
+  color: #f1d2c8;
+  background: linear-gradient(180deg, #3b0b14 0%, #22050b 100%);
+  box-shadow: inset 0 0 0 2px rgba(200, 40, 40, 0.55);
+}
+
+/* ---------- Particules ---------- */
+.ce-particles { position: absolute; inset: 0; }
+.ce-p {
+  position: absolute;
+  width: var(--s); height: var(--s);
+  border-radius: 50%;
+  opacity: 0;
+}
+.ce-critical .ce-p {
+  left: 50%; top: calc(50% - 9vmin);
+  background: radial-gradient(circle, #fffbe6 0%, #ffd56a 45%, rgba(255, 170, 40, 0) 70%);
+  box-shadow: 0 0 10px 2px rgba(255, 200, 80, 0.8);
+  animation: ce-burst 1.8s cubic-bezier(.1, .7, .3, 1) var(--delay) forwards;
+}
+.ce-critical .ce-star {
+  width: calc(var(--s) * 2.4); height: calc(var(--s) * 2.4);
+  border-radius: 0;
+  box-shadow: none;
+  background: #fff6cf;
+  clip-path: polygon(50% 0, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0 50%, 40% 40%);
+  filter: drop-shadow(0 0 6px #ffd56a);
+}
+@keyframes ce-burst {
+  0% { opacity: 1; transform: rotate(var(--a)) translateX(0) scale(1.2); }
+  100% { opacity: 0; transform: rotate(var(--a)) translateX(var(--d)) scale(0.3); }
+}
+.ce-fumble .ce-p {
+  left: var(--x); bottom: -2vh;
+  background: radial-gradient(circle, #ffd0a0 0%, #ff4a1c 45%, rgba(120, 0, 0, 0) 70%);
+  box-shadow: 0 0 8px 1px rgba(255, 60, 20, 0.7);
+  animation: ce-ember 2.8s ease-in var(--delay) forwards;
+}
+@keyframes ce-ember {
+  0% { opacity: 0; transform: translate(0, 0); }
+  15% { opacity: 1; }
+  100% { opacity: 0; transform: translate(calc(var(--d) * 0.25), calc(var(--d) * -2.2)); }
+}
+
+/* ---------- Secousse de la scène (échec critique) ---------- */
+#board.ce-shake { animation: ce-board-shake 0.6s cubic-bezier(.36, .07, .19, .97) both; }
+@keyframes ce-board-shake {
+  10%, 90% { transform: translate(-2px, 1px); }
+  20%, 80% { transform: translate(5px, -2px); }
+  30%, 50%, 70% { transform: translate(-9px, 3px); }
+  40%, 60% { transform: translate(9px, -3px); }
+}
+
+/* ---------- Mouvements réduits ---------- */
+.critiques-epiques.ce-reduced .ce-rays,
+.critiques-epiques.ce-reduced .ce-ring-a,
+.critiques-epiques.ce-reduced .ce-ring-b { animation: ce-ring-in 0.6s ease-out both; }
+.critiques-epiques.ce-reduced .ce-title { animation-duration: 0.5s; }
+.critiques-epiques.ce-reduced .ce-title::after,
+.critiques-epiques.ce-reduced .ce-flash { display: none; }
+@media (prefers-reduced-motion: reduce) {
+  .ce-rays, .ce-ring-a, .ce-ring-b { animation: none; }
+  .ce-flash, .ce-critical .ce-title::after { display: none; }
+}
+
+/* ---------- Fenêtre de test ---------- */
+#critiques-epiques-test .window-content { gap: 0.75rem; }
+#critiques-epiques-test .ce-test-buttons { display: flex; gap: 0.5rem; }
+#critiques-epiques-test .ce-test-buttons button { flex: 1; }

@@ -1,0 +1,89 @@
+{
+  "CRITEPIQ": {
+    "Title": {
+      "attackCrit": "Critical Hit!",
+      "crit": "Critical Success!",
+      "attackFumble": "Critical Miss!",
+      "fumble": "Critical Failure!",
+      "deathCrit": "Back from the Brink!",
+      "deathFumble": "The Veil Darkens…"
+    },
+    "Type": {
+      "attack": "Attack",
+      "skill": "Skill",
+      "save": "Saving Throw",
+      "ability": "Ability Check",
+      "check": "Check",
+      "tool": "Tool",
+      "death": "Death Saving Throw",
+      "concentration": "Concentration",
+      "initiative": "Initiative"
+    },
+    "Settings": {
+      "EnableCritical": {
+        "Name": "Effect on critical successes",
+        "Hint": "Shows the golden effect on a natural 20 (or the weapon's critical threshold)."
+      },
+      "EnableFumble": {
+        "Name": "Effect on critical failures",
+        "Hint": "Shows the dark effect on a natural 1."
+      },
+      "RollTypes": {
+        "Name": "Rolls affected",
+        "Hint": "Which d20 rolls trigger the effect.",
+        "All": "All d20 rolls",
+        "Attack": "Attacks only",
+        "AttackSave": "Attacks and saving throws"
+      },
+      "Audience": {
+        "Name": "Who sees the effect",
+        "Hint": "Private or blind rolls only trigger it for users who can see them.",
+        "Visible": "Everyone who can see the roll",
+        "Roller": "Only the roller"
+      },
+      "IncludeNpc": {
+        "Name": "Include NPCs",
+        "Hint": "Uncheck to only trigger the effect for player characters."
+      },
+      "CriticalSound": {
+        "Name": "Critical success sound",
+        "Hint": "Audio file to play. Leave empty for the built-in chime."
+      },
+      "FumbleSound": {
+        "Name": "Critical failure sound",
+        "Hint": "Audio file to play. Leave empty for the built-in knell."
+      },
+      "ShowEffects": {
+        "Name": "Show critical effects",
+        "Hint": "Per-user setting."
+      },
+      "Volume": {
+        "Name": "Effect volume",
+        "Hint": "Multiplied by Foundry's interface volume. 0 mutes."
+      },
+      "Duration": {
+        "Name": "Effect duration (seconds)",
+        "Hint": "Click the effect to dismiss it early."
+      },
+      "Shake": {
+        "Name": "Shake on critical failures",
+        "Hint": "Shakes the scene on a natural 1."
+      },
+      "ReducedMotion": {
+        "Name": "Reduced motion",
+        "Hint": "Fewer animations and particles."
+      },
+      "Test": {
+        "Name": "Test the effects",
+        "Label": "Test",
+        "Hint": "Opens a window to preview both effects."
+      }
+    },
+    "Test": {
+      "Window": "Epic Criticals — Test",
+      "Text": "Only you see these previews.",
+      "Critical": "Critical success",
+      "Fumble": "Critical failure"
+    }
+  }
+}
