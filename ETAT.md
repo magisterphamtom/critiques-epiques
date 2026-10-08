@@ -1,6 +1,12 @@
 # État — Critiques Épiques
 
-## Fait (v1.0.0, 8 octobre 2026)
+## v1.1.0 (8 octobre 2026)
+- 20 thèmes (scripts/themes.js) : 10 réussites, 10 échecs ; décors, sceaux, particules et sons propres (scripts/effects.js, scripts/sounds.js).
+- Tirage par hash de l'id du message (FNV-1a) → même visuel chez tous les clients.
+- Menu MJ « Choisir les visuels » (réglage monde `disabledThemes`), aperçu par thème.
+- Captures vérifiées pour les 20 thèmes ; à tester en jeu.
+
+## v1.0.0 (8 octobre 2026)
 - Détection via `createChatMessage` : premier `CONFIG.Dice.D20Roll` valide du message, `isCritical` / `isFumble` (dnd5e 6.0.6, gère avantage/désavantage et seuil critique de l'arme).
 - Type de jet lu dans `flags.dnd5e.roll.type` (attack, skill, save, ability, check, tool, death, concentration, initiative).
 - Visibilité : `message.isContentVisible` ; option « seulement le lanceur ».
@@ -15,5 +21,5 @@
 - Lisibilité sur petit écran.
 
 ## Idées
-- Thèmes supplémentaires (glace, nature, nécromancie selon le type de dégâts).
+- Choisir le thème selon le type de dégâts (feu → dragon, froid → givre…).
 - Citations personnalisées par acteur.

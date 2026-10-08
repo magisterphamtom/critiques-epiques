@@ -4,8 +4,11 @@
  * (échec critique) des jets de d20 du système D&D 5e (6.x), Foundry v13/v14.
  */
 
+import { THEMES, hashString } from "./themes.js";
+import { d20Svg, layersHtml, sigilHtml, particlesHtml } from "./effects.js";
+import { playSynth } from "./sounds.js";
+
 const MODULE_ID = "critiques-epiques";
-const RUNES = "ᚠᚢᚦᚨᚱᚲᚷᚹᚺᚾᛁᛃᛇᛈᛉᛊᛏᛒᛖᛗᛚᛜᛞᛟ";
 
 /* ------------------------------------------------------------------ */
 /*  Réglages                                                           */
@@ -49,6 +52,13 @@ function registerSettings() {
   s("reducedMotion", { name: L("ReducedMotion.Name"), hint: L("ReducedMotion.Hint"),
     scope: "client", config: true, type: Boolean, default: false });
 
+  // Thèmes désactivés par le MJ (les nouveaux thèmes sont donc actifs par défaut).
+  s("disabledThemes", { scope: "world", config: false, type: Object, default: { critical: [], fumble: [] } });
+
+  game.settings.registerMenu(MODULE_ID, "themesMenu", {
+    name: L("Themes.Name"), label: L("Themes.Label"), hint: L("Themes.Hint"),
+    icon: "fa-solid fa-palette", type: ThemesApp, restricted: true
+  });
   game.settings.registerMenu(MODULE_ID, "testMenu", {
     name: L("Test.Name"), label: L("Test.Label"), hint: L("Test.Hint"),
     icon: "fa-solid fa-dice-d20", type: TestApp, restricted: false
@@ -133,6 +143,8 @@ async function onCreateChatMessage(message) {
     }
 
     play(found.kind, {
+      seed: hashString(message.id),
+      type,
       title: titleFor(found.kind, type),
       name: info.name,
       subtitle: [info.label, info.item].filter(Boolean).join(" · "),
@@ -144,119 +156,66 @@ async function onCreateChatMessage(message) {
 }
 
 /* ------------------------------------------------------------------ */
+/*  Choix du thème                                                      */
+/* ------------------------------------------------------------------ */
+
+export function enabledThemes(kind) {
+  const disabled = new Set(get("disabledThemes")?.[kind] ?? []);
+  const list = THEMES[kind].filter((t) => !disabled.has(t.id));
+  return list.length ? list : THEMES[kind];
+}
+
+/** Même graine (id du message) = même thème chez tous les joueurs. */
+function pickTheme(kind, seed) {
+  const list = enabledThemes(kind);
+  return list[seed % list.length];
+}
+
+/* ------------------------------------------------------------------ */
 /*  Effet visuel                                                        */
 /* ------------------------------------------------------------------ */
 
 let current = null;
-
-function d20Svg(face, kind) {
-  // Icosaèdre vu de face : hexagone + triangle central + arêtes.
-  const id = `ce-g-${foundry.utils.randomID(6)}`;
-  const stops = kind === "critical"
-    ? `<stop offset="0" stop-color="#fff6cf"/><stop offset=".45" stop-color="#f1c35a"/><stop offset="1" stop-color="#8a5a12"/>`
-    : `<stop offset="0" stop-color="#4a2030"/><stop offset=".5" stop-color="#1c0a12"/><stop offset="1" stop-color="#050204"/>`;
-  const edge = kind === "critical" ? "#fff2c4" : "#ff4a3d";
-  const crack = kind === "fumble"
-    ? `<path class="ce-die-crack" d="M100 10 L94 40 L76 62 L70 92 L52 112 L44 140" />
-       <path class="ce-die-crack" d="M76 62 L50 58 M70 92 L40 96 M140 150 L150 172 L138 186" />`
-    : "";
-  return `<svg class="ce-die-svg" viewBox="0 0 200 200" aria-hidden="true">
-    <defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1">${stops}</linearGradient></defs>
-    <polygon points="100,8 180,54 180,146 100,192 20,146 20,54" fill="url(#${id})" stroke="${edge}" stroke-width="4" stroke-linejoin="round"/>
-    <g fill="none" stroke="${edge}" stroke-opacity=".75" stroke-width="2.5" stroke-linejoin="round">
-      <polygon points="100,42 152,132 48,132"/>
-      <path d="M100 8 L100 42 M180 54 L152 132 M180 54 L100 42 M20 54 L100 42 M20 54 L48 132 M180 146 L152 132 M20 146 L48 132 M100 192 L152 132 M100 192 L48 132"/>
-    </g>
-    ${crack}
-    <text x="100" y="114" text-anchor="middle" dominant-baseline="middle" class="ce-die-face">${face}</text>
-  </svg>`;
-}
-
-function runeRing(radius, cls) {
-  const text = Array.from({ length: 3 }, () => RUNES).join(" ");
-  const id = `ce-r-${foundry.utils.randomID(6)}`;
-  return `<svg class="ce-ring ${cls}" viewBox="-300 -300 600 600" aria-hidden="true">
-    <defs><path id="${id}" d="M ${-radius},0 a ${radius},${radius} 0 1,1 ${radius * 2},0 a ${radius},${radius} 0 1,1 ${-radius * 2},0"/></defs>
-    <circle r="${radius + 22}" class="ce-ring-line"/><circle r="${radius - 24}" class="ce-ring-line"/>
-    <text class="ce-ring-text"><textPath href="#${id}" textLength="${Math.round(2 * Math.PI * radius) - 10}">${text}</textPath></text>
-  </svg>`;
-}
-
-function cracksSvg() {
-  // Fissures aléatoires partant du centre de l'écran.
-  const paths = [];
-  const count = 9;
-  for (let i = 0; i < count; i++) {
-    const base = (i / count) * Math.PI * 2 + (Math.random() - 0.5) * 0.4;
-    let x = 0, y = 0, a = base;
-    let d = `M 0 0`;
-    const steps = 6 + Math.floor(Math.random() * 4);
-    for (let k = 0; k < steps; k++) {
-      a += (Math.random() - 0.5) * 0.7;
-      const len = 60 + Math.random() * 90;
-      x += Math.cos(a) * len; y += Math.sin(a) * len;
-      d += ` L ${x.toFixed(0)} ${y.toFixed(0)}`;
-      if (Math.random() < 0.3) {
-        const b = a + (Math.random() < 0.5 ? 1 : -1) * (0.6 + Math.random() * 0.5);
-        const bl = 40 + Math.random() * 70;
-        paths.push(`M ${x.toFixed(0)} ${y.toFixed(0)} L ${(x + Math.cos(b) * bl).toFixed(0)} ${(y + Math.sin(b) * bl).toFixed(0)}`);
-      }
-    }
-    paths.push(d);
-  }
-  return `<svg class="ce-cracks" viewBox="-960 -540 1920 1080" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-    ${paths.map((p, i) => `<path d="${p}" style="--i:${i}"/>`).join("")}
-  </svg>`;
-}
-
-function particles(kind, count) {
-  const out = [];
-  for (let i = 0; i < count; i++) {
-    const angle = Math.random() * 360;
-    const dist = (kind === "critical" ? 28 : 16) + Math.random() * (kind === "critical" ? 30 : 34);
-    const size = 3 + Math.random() * (kind === "critical" ? 7 : 6);
-    const delay = Math.random() * (kind === "critical" ? 0.5 : 1.2);
-    const star = kind === "critical" && Math.random() < 0.3;
-    out.push(`<span class="ce-p${star ? " ce-star" : ""}" style="--a:${angle}deg;--d:${dist}vmin;--s:${size}px;--delay:${delay}s;--x:${(Math.random() * 100).toFixed(1)}vw"></span>`);
-  }
-  return `<div class="ce-particles">${out.join("")}</div>`;
-}
+const esc = (s) => foundry.utils.escapeHTML(String(s ?? ""));
 
 /**
  * Joue l'effet. Accessible aux macros :
- *   game.modules.get("critiques-epiques").api.play("critical", {name: "Aria", subtitle: "Attaque"})
+ *   game.modules.get("critiques-epiques").api.play("critical", {name: "Aria", subtitle: "Attaque", theme: "dragon"})
  */
-export function play(kind = "critical", { title, name = "", subtitle = "", face } = {}) {
+export function play(kind = "critical", { title, name = "", subtitle = "", face, theme, seed, type = null } = {}) {
   kind = kind === "fumble" ? "fumble" : "critical";
-  title ??= titleFor(kind, null);
+  seed ??= Math.floor(Math.random() * 2 ** 31);
+  const th = (theme && THEMES[kind].find((t) => t.id === theme)) || pickTheme(kind, seed);
+  title ??= titleFor(kind, type);
   face ??= kind === "critical" ? 20 : 1;
+  const tagline = th.taglines?.length ? th.taglines[(seed >>> 4) % th.taglines.length] : "";
   const reduced = get("reducedMotion");
   const duration = Number(get("duration")) || 3.5;
 
   current?.remove();
   const el = document.createElement("div");
-  el.className = `critiques-epiques ce-${kind}${reduced ? " ce-reduced" : ""}`;
+  el.className = `critiques-epiques ce-${kind} ce-th-${th.id}${reduced ? " ce-reduced" : ""}`;
   el.style.setProperty("--ce-dur", `${duration}s`);
   el.innerHTML = `
-    <div class="ce-vignette"></div>
-    ${kind === "critical" ? `<div class="ce-rays"></div><div class="ce-flash"></div>` : cracksSvg()}
+    ${layersHtml(th.layers)}
     <div class="ce-stage">
-      <div class="ce-rings">${runeRing(230, "ce-ring-a")}${runeRing(170, "ce-ring-b")}</div>
+      <div class="ce-rings">${sigilHtml(th.sigil)}</div>
       <div class="ce-die">${d20Svg(face, kind)}</div>
       <div class="ce-banner">
-        <div class="ce-title" data-text="${foundry.utils.escapeHTML(title)}">${foundry.utils.escapeHTML(title)}</div>
+        ${tagline ? `<div class="ce-tagline">${esc(tagline)}</div>` : ""}
+        <div class="ce-title" data-text="${esc(title)}">${esc(title)}</div>
         ${name || subtitle ? `<div class="ce-ribbon">
-          ${name ? `<span class="ce-name">${foundry.utils.escapeHTML(name)}</span>` : ""}
-          ${subtitle ? `<span class="ce-sub">${foundry.utils.escapeHTML(subtitle)}</span>` : ""}
+          ${name ? `<span class="ce-name">${esc(name)}</span>` : ""}
+          ${subtitle ? `<span class="ce-sub">${esc(subtitle)}</span>` : ""}
         </div>` : ""}
       </div>
     </div>
-    ${particles(kind, reduced ? 12 : (kind === "critical" ? 46 : 38))}`;
+    ${particlesHtml(th.particles, reduced)}`;
   document.body.appendChild(el);
   current = el;
 
-  if (get("shake") && !reduced && kind === "fumble") shakeBoard();
-  playSound(kind);
+  if (get("shake") && !reduced && th.shake) shakeBoard();
+  playSound(kind, th.sound);
 
   const remove = () => { if (el.isConnected) el.remove(); if (current === el) current = null; };
   el.addEventListener("click", remove);
@@ -273,13 +232,7 @@ function shakeBoard() {
   setTimeout(() => board.classList.remove("ce-shake"), 700);
 }
 
-/* ------------------------------------------------------------------ */
-/*  Sons (fichier choisi par le MJ, sinon son synthétisé)               */
-/* ------------------------------------------------------------------ */
-
-let audioCtx = null;
-
-function playSound(kind) {
+function playSound(kind, synth) {
   const volume = Number(get("volume")) * (game.settings.get("core", "globalInterfaceVolume") ?? 1);
   if (!volume) return;
   const file = get(kind === "critical" ? "criticalSound" : "fumbleSound");
@@ -288,93 +241,30 @@ function playSound(kind) {
       .catch((err) => console.warn(`${MODULE_ID} | Son illisible : ${file}`, err));
     return;
   }
-  try {
-    audioCtx ??= new AudioContext();
-    if (audioCtx.state === "suspended") audioCtx.resume();
-    (kind === "critical" ? synthCritical : synthFumble)(audioCtx, volume);
-  } catch (err) {
-    console.warn(`${MODULE_ID} | Son synthétisé indisponible`, err);
-  }
-}
-
-function tone(ctx, out, { freq, type = "sine", start, dur, gain = 0.3, glideTo = null }) {
-  const osc = ctx.createOscillator();
-  const g = ctx.createGain();
-  osc.type = type;
-  osc.frequency.setValueAtTime(freq, start);
-  if (glideTo) osc.frequency.exponentialRampToValueAtTime(glideTo, start + dur);
-  g.gain.setValueAtTime(0.0001, start);
-  g.gain.exponentialRampToValueAtTime(gain, start + 0.02);
-  g.gain.exponentialRampToValueAtTime(0.0001, start + dur);
-  osc.connect(g).connect(out);
-  osc.start(start);
-  osc.stop(start + dur + 0.05);
-}
-
-function noise(ctx, out, { start, dur, gain = 0.3, filter = 800, type = "lowpass" }) {
-  const len = Math.floor(ctx.sampleRate * dur);
-  const buf = ctx.createBuffer(1, len, ctx.sampleRate);
-  const data = buf.getChannelData(0);
-  for (let i = 0; i < len; i++) data[i] = (Math.random() * 2 - 1) * (1 - i / len) ** 2;
-  const src = ctx.createBufferSource();
-  src.buffer = buf;
-  const f = ctx.createBiquadFilter();
-  f.type = type; f.frequency.value = filter;
-  const g = ctx.createGain();
-  g.gain.value = gain;
-  src.connect(f).connect(g).connect(out);
-  src.start(start);
-}
-
-function synthCritical(ctx, volume) {
-  const out = ctx.createGain();
-  out.gain.value = volume * 0.8;
-  out.connect(ctx.destination);
-  const t = ctx.currentTime + 0.02;
-  noise(ctx, out, { start: t, dur: 0.6, gain: 0.25, filter: 3000, type: "highpass" }); // souffle
-  // Arpège de cloches en majeur (do – mi – sol – do – mi)
-  [523.25, 659.25, 783.99, 1046.5, 1318.5].forEach((f, i) => {
-    tone(ctx, out, { freq: f, type: "triangle", start: t + 0.08 + i * 0.09, dur: 1.6, gain: 0.22 });
-    tone(ctx, out, { freq: f * 2.01, type: "sine", start: t + 0.08 + i * 0.09, dur: 0.9, gain: 0.06 });
-  });
-  // Accord final tenu
-  [261.63, 329.63, 392.0].forEach((f) => tone(ctx, out, { freq: f, type: "sine", start: t + 0.55, dur: 2.2, gain: 0.12 }));
-}
-
-function synthFumble(ctx, volume) {
-  const out = ctx.createGain();
-  out.gain.value = volume * 0.9;
-  out.connect(ctx.destination);
-  const t = ctx.currentTime + 0.02;
-  noise(ctx, out, { start: t, dur: 0.35, gain: 0.6, filter: 4200, type: "bandpass" }); // craquement
-  tone(ctx, out, { freq: 120, type: "sine", start: t, dur: 1.1, gain: 0.55, glideTo: 38 }); // coup sourd
-  // Glas descendant en mineur
-  [392.0, 311.13, 261.63, 196.0].forEach((f, i) => {
-    tone(ctx, out, { freq: f, type: "sawtooth", start: t + 0.25 + i * 0.22, dur: 0.9, gain: 0.05, glideTo: f * 0.94 });
-    tone(ctx, out, { freq: f / 2, type: "sine", start: t + 0.25 + i * 0.22, dur: 1.2, gain: 0.12 });
-  });
+  playSynth(synth, volume);
 }
 
 /* ------------------------------------------------------------------ */
-/*  Fenêtre de test (Réglages → Configurer les réglages)                */
+/*  Fenêtres : test (joueurs) et choix des thèmes (MJ)                  */
 /* ------------------------------------------------------------------ */
 
 const { ApplicationV2 } = foundry.applications.api;
+const playerName = () => game.user.character?.name ?? game.user.name;
+const t = (k) => game.i18n.localize(k);
 
 class TestApp extends ApplicationV2 {
   static DEFAULT_OPTIONS = {
     id: "critiques-epiques-test",
     tag: "div",
     window: { title: "CRITEPIQ.Test.Window", icon: "fa-solid fa-dice-d20" },
-    position: { width: 380, height: "auto" },
+    position: { width: 400, height: "auto" },
     actions: {
-      critical: () => play("critical", { name: game.user.character?.name ?? game.user.name, subtitle: game.i18n.localize("CRITEPIQ.Type.attack") }),
-      fumble: () => play("fumble", { name: game.user.character?.name ?? game.user.name, subtitle: game.i18n.localize("CRITEPIQ.Type.attack") })
+      critical: () => play("critical", { name: playerName(), subtitle: t("CRITEPIQ.Type.attack"), type: "attack" }),
+      fumble: () => play("fumble", { name: playerName(), subtitle: t("CRITEPIQ.Type.attack"), type: "attack" })
     }
   };
 
   async _renderHTML() {
-    const t = (k) => game.i18n.localize(k);
     return `<p>${t("CRITEPIQ.Test.Text")}</p>
       <div class="ce-test-buttons">
         <button type="button" data-action="critical"><i class="fa-solid fa-sun"></i> ${t("CRITEPIQ.Test.Critical")}</button>
@@ -387,13 +277,75 @@ class TestApp extends ApplicationV2 {
   }
 }
 
+class ThemesApp extends ApplicationV2 {
+  static DEFAULT_OPTIONS = {
+    id: "critiques-epiques-themes",
+    tag: "form",
+    window: { title: "CRITEPIQ.Themes.Window", icon: "fa-solid fa-palette", resizable: true },
+    position: { width: 620, height: "auto" },
+    form: { handler: ThemesApp.#onSubmit, closeOnSubmit: true },
+    actions: {
+      preview: ThemesApp.#onPreview,
+      all: ThemesApp.#onAll
+    }
+  };
+
+  async _renderHTML() {
+    const disabled = get("disabledThemes") ?? {};
+    const column = (kind) => {
+      const off = new Set(disabled[kind] ?? []);
+      const rows = THEMES[kind].map((th) => `
+        <li class="ce-theme-row">
+          <label><input type="checkbox" name="${kind}.${th.id}" ${off.has(th.id) ? "" : "checked"}> ${esc(th.label)}</label>
+          <button type="button" data-action="preview" data-kind="${kind}" data-theme="${th.id}" data-tooltip="${t("CRITEPIQ.Themes.Preview")}">
+            <i class="fa-solid fa-eye"></i></button>
+        </li>`).join("");
+      return `<section class="ce-theme-col ce-col-${kind}">
+        <h3><i class="fa-solid ${kind === "critical" ? "fa-sun" : "fa-skull"}"></i> ${t(kind === "critical" ? "CRITEPIQ.Themes.Critical" : "CRITEPIQ.Themes.Fumble")}
+          <a data-action="all" data-kind="${kind}" class="ce-all">${t("CRITEPIQ.Themes.All")}</a></h3>
+        <ul>${rows}</ul></section>`;
+    };
+    return `<p class="hint">${t("CRITEPIQ.Themes.Text")}</p>
+      <div class="ce-theme-grid">${column("critical")}${column("fumble")}</div>
+      <footer class="form-footer"><button type="submit"><i class="fa-solid fa-floppy-disk"></i> ${t("CRITEPIQ.Themes.Save")}</button></footer>`;
+  }
+
+  _replaceHTML(result, content) {
+    content.innerHTML = result;
+  }
+
+  static #onPreview(event, target) {
+    const kind = target.dataset.kind;
+    play(kind, { theme: target.dataset.theme, name: playerName(), subtitle: t("CRITEPIQ.Type.attack"), type: "attack" });
+  }
+
+  static #onAll(event, target) {
+    const boxes = this.element.querySelectorAll(`input[name^="${target.dataset.kind}."]`);
+    const allOn = [...boxes].every((b) => b.checked);
+    boxes.forEach((b) => { b.checked = !allOn; });
+  }
+
+  static async #onSubmit(event, form, formData) {
+    const data = formData.object;
+    const disabled = { critical: [], fumble: [] };
+    for (const kind of ["critical", "fumble"]) {
+      for (const th of THEMES[kind]) if (!data[`${kind}.${th.id}`]) disabled[kind].push(th.id);
+      if (disabled[kind].length === THEMES[kind].length) {
+        ui.notifications.warn(t("CRITEPIQ.Themes.NoneWarning"));
+        disabled[kind] = [];
+      }
+    }
+    await game.settings.set(MODULE_ID, "disabledThemes", disabled);
+  }
+}
+
 /* ------------------------------------------------------------------ */
 /*  Initialisation                                                       */
 /* ------------------------------------------------------------------ */
 
 Hooks.once("init", () => {
   registerSettings();
-  game.modules.get(MODULE_ID).api = { play };
+  game.modules.get(MODULE_ID).api = { play, themes: THEMES };
 });
 
 Hooks.once("ready", () => {

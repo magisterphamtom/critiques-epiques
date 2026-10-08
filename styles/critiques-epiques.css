@@ -14,6 +14,178 @@
 @font-face { font-family: "CE Runic"; font-weight: 400; font-display: swap;
   src: url("../fonts/noto-sans-runic-runic-400-normal.woff2") format("woff2"); }
 
+/* ==========================================================================
+   1. Palettes des thèmes
+   --c1 clair · --c2 principal · --c3 sombre · --glow halo · --bg teinte de fond
+   --rib1/--rib2/--ink/--rib-edge bandeau · --die1..3/--die-edge/--die-ink dé
+   --p1/--p2 particules · --title dégradé du titre · --title-shadow contour
+   ========================================================================== */
+
+.critiques-epiques {
+  --c1: #fff6cf; --c2: #f1c35a; --c3: #8a5a12;
+  --glow: rgba(255, 200, 90, 0.42); --bg: rgba(18, 10, 0, 0.78);
+  --rib1: #f8e7bf; --rib2: #d4b06c; --ink: #3d2304; --rib-edge: rgba(120, 76, 14, 0.55);
+  --die1: #fff6cf; --die2: #f1c35a; --die3: #8a5a12; --die-edge: #fff2c4; --die-ink: #5a3200;
+  --p1: #ffd56a; --p2: #fffbe6;
+  --title: linear-gradient(180deg, #fffbe8 0%, #ffe28a 38%, #c98a1c 52%, #8c5810 60%, #f6d47c 82%, #fff3c4 100%);
+  --title-shadow: #4a2a00;
+}
+
+/* --- Réussites --- */
+.ce-th-arcane {
+  --c1: #f3e6ff; --c2: #b77bff; --c3: #3b1470; --glow: rgba(170, 100, 255, 0.42); --bg: rgba(10, 2, 26, 0.82);
+  --rib1: #2a1250; --rib2: #170830; --ink: #eadbff; --rib-edge: rgba(180, 130, 255, 0.7);
+  --die1: #f6ecff; --die2: #a46bff; --die3: #2b0d5c; --die-edge: #e6d4ff; --die-ink: #ffffff;
+  --p1: #b98bff; --p2: #6ff0ff;
+  --title: linear-gradient(180deg, #ffffff 0%, #e2c9ff 35%, #9b5cff 55%, #5ad8ff 85%, #e9fbff 100%);
+  --title-shadow: #1c0640;
+}
+.ce-th-dragon {
+  --c1: #fff0b0; --c2: #ff7a1a; --c3: #7a1004; --glow: rgba(255, 110, 20, 0.5); --bg: rgba(26, 4, 0, 0.82);
+  --rib1: #3a0d04; --rib2: #1d0502; --ink: #ffd9a0; --rib-edge: rgba(255, 120, 40, 0.7);
+  --die1: #ffe39a; --die2: #ff6a10; --die3: #5a0a02; --die-edge: #ffd27a; --die-ink: #3a0600;
+  --p1: #ff8a2a; --p2: #ffe08a;
+  --title: linear-gradient(180deg, #fff7d0 0%, #ffd060 30%, #ff7a1a 55%, #c41e06 80%, #ff9a3a 100%);
+  --title-shadow: #3a0600;
+}
+.ce-th-givre {
+  --c1: #f4fbff; --c2: #8fd3ff; --c3: #1f5f8f; --glow: rgba(160, 215, 255, 0.45); --bg: rgba(2, 14, 28, 0.8);
+  --rib1: #eaf6ff; --rib2: #b9dcf2; --ink: #123a58; --rib-edge: rgba(80, 150, 200, 0.6);
+  --die1: rgba(240, 250, 255, 0.95); --die2: rgba(150, 210, 250, 0.85); --die3: rgba(30, 90, 140, 0.9); --die-edge: #ffffff; --die-ink: #0d3552;
+  --p1: #cfeeff; --p2: #ffffff;
+  --title: linear-gradient(180deg, #ffffff 0%, #e2f5ff 35%, #7cc6f2 58%, #2f7fb8 75%, #d8f2ff 100%);
+  --title-shadow: #0b2a44;
+}
+.ce-th-foudre {
+  --c1: #ffffff; --c2: #9ad8ff; --c3: #2b3d8f; --glow: rgba(140, 190, 255, 0.38); --bg: rgba(2, 4, 20, 0.86);
+  --rib1: #1a2350; --rib2: #0c1230; --ink: #e2f0ff; --rib-edge: rgba(140, 200, 255, 0.75);
+  --die1: #ffffff; --die2: #8cc8ff; --die3: #1b2a70; --die-edge: #e8f6ff; --die-ink: #0a1440;
+  --p1: #bfe4ff; --p2: #ffffff;
+  --title: linear-gradient(180deg, #ffffff 0%, #ecf7ff 35%, #7fc4ff 55%, #4a6dff 78%, #ffffff 100%);
+  --title-shadow: #0a1440;
+}
+.ce-th-sylvestre {
+  --c1: #f2ffd8; --c2: #8fd14f; --c3: #2e5e1a; --glow: rgba(170, 235, 110, 0.38); --bg: rgba(4, 16, 4, 0.8);
+  --rib1: #f3f0d0; --rib2: #c9d79a; --ink: #24401a; --rib-edge: rgba(70, 120, 40, 0.6);
+  --die1: #f1ffd4; --die2: #9fd25a; --die3: #2a5414; --die-edge: #f7e7a0; --die-ink: #1e3a0e;
+  --p1: #7fc23a; --p2: #f3d27a;
+  --title: linear-gradient(180deg, #fbffe8 0%, #d8f59a 35%, #7fbf3a 55%, #3e7a1e 70%, #f3d27a 100%);
+  --title-shadow: #142a08;
+}
+.ce-th-celeste {
+  --c1: #ffffff; --c2: #c9d6ff; --c3: #2a2f7a; --glow: rgba(150, 170, 255, 0.35); --bg: rgba(2, 3, 18, 0.9);
+  --rib1: #1b1f52; --rib2: #0d1030; --ink: #e8ecff; --rib-edge: rgba(190, 200, 255, 0.6);
+  --die1: #ffffff; --die2: #b9c6ff; --die3: #262b70; --die-edge: #ffffff; --die-ink: #141a55;
+  --p1: #dfe6ff; --p2: #ffffff;
+  --title: linear-gradient(180deg, #ffffff 0%, #eef1ff 35%, #a8b7ff 58%, #6b78e0 75%, #ffffff 100%);
+  --title-shadow: #0b0e40;
+}
+.ce-th-royal {
+  --c1: #fff3c4; --c2: #e2b347; --c3: #6b1a3a; --glow: rgba(255, 210, 110, 0.4); --bg: rgba(20, 2, 10, 0.8);
+  --rib1: #8e1b33; --rib2: #5a0d20; --ink: #ffe9a8; --rib-edge: rgba(240, 200, 100, 0.85);
+  --die1: #fff3c4; --die2: #e2b347; --die3: #7a4a10; --die-edge: #fff2c4; --die-ink: #5a1024;
+  --p1: #c4223f; --p2: #f6d47c;
+}
+.ce-th-phenix {
+  --c1: #fff3c0; --c2: #ff9a2e; --c3: #a0201a; --glow: rgba(255, 140, 40, 0.45); --bg: rgba(24, 4, 0, 0.8);
+  --rib1: #fff0cf; --rib2: #f3b65a; --ink: #5a1a04; --rib-edge: rgba(200, 80, 20, 0.6);
+  --die1: #fff6d0; --die2: #ff9a2e; --die3: #8a1a0a; --die-edge: #ffe4a0; --die-ink: #5a1004;
+  --p1: #ff7a20; --p2: #ffd060;
+  --title: linear-gradient(180deg, #fffbe0 0%, #ffd56a 30%, #ff8a2a 55%, #d0341a 78%, #ffcf6a 100%);
+  --title-shadow: #4a0a00;
+}
+.ce-th-forge {
+  --c1: #ffe0b0; --c2: #d98a3a; --c3: #4a2a14; --glow: rgba(255, 150, 60, 0.36); --bg: rgba(14, 8, 4, 0.84);
+  --rib1: #3a2a1e; --rib2: #1e140c; --ink: #f6d7a8; --rib-edge: rgba(220, 150, 80, 0.7);
+  --die1: #f3d3a0; --die2: #b9773a; --die3: #3a2010; --die-edge: #ffd9a0; --die-ink: #2a1406;
+  --p1: #ffb24a; --p2: #fff0c0;
+  --title: linear-gradient(180deg, #fff2d6 0%, #f3c27a 35%, #b8722e 55%, #6a3a14 65%, #e8b070 100%);
+  --title-shadow: #2a1406;
+}
+
+/* --- Échecs --- */
+.ce-fumble {
+  --c1: #ffb3a1; --c2: #ff4434; --c3: #3f0310; --glow: rgba(120, 10, 25, 0.38); --bg: rgba(5, 0, 2, 0.9);
+  --rib1: #3b0b14; --rib2: #22050b; --ink: #f1d2c8; --rib-edge: rgba(200, 40, 40, 0.55);
+  --die1: #4a2030; --die2: #1c0a12; --die3: #050204; --die-edge: #ff4a3d; --die-ink: #ff3b30;
+  --p1: #ff4a1c; --p2: #ffd0a0;
+  --title: linear-gradient(180deg, #ffb3a1 0%, #ff4434 30%, #a00c1c 55%, #3f0310 100%);
+  --title-shadow: #120006; --crack: #12030a; --crack-glow: rgba(255, 40, 30, 0.95);
+}
+.ce-th-malediction {
+  --c1: #e7c8ff; --c2: #9b4be0; --c3: #1a0526; --glow: rgba(110, 30, 160, 0.45); --bg: rgba(4, 0, 8, 0.9);
+  --rib1: #2a0a3a; --rib2: #12031c; --ink: #e8d0ff; --rib-edge: rgba(125, 255, 106, 0.55);
+  --die1: #3a1a50; --die2: #160622; --die3: #050108; --die-edge: #9dff7a; --die-ink: #9dff7a;
+  --p1: #7dff6a; --p2: #c88bff; --smoke: rgba(60, 15, 90, 0.55);
+  --title: linear-gradient(180deg, #f1ddff 0%, #b46cff 35%, #5a1a96 60%, #7dff6a 100%);
+  --title-shadow: #0a0012;
+}
+.ce-th-poison {
+  --c1: #e8ffb0; --c2: #7ed321; --c3: #1c3a06; --glow: rgba(80, 160, 20, 0.4); --bg: rgba(2, 8, 0, 0.88);
+  --rib1: #1e3a0a; --rib2: #0d1e04; --ink: #e2ffb8; --rib-edge: rgba(150, 230, 60, 0.6);
+  --die1: #2e4a14; --die2: #11220a; --die3: #030801; --die-edge: #a6ff3a; --die-ink: #c4ff5a;
+  --p1: #9be640; --p2: #e8ffb0; --drip: #5fae1a; --drip-glow: rgba(150, 255, 40, 0.6);
+  --title: linear-gradient(180deg, #f2ffd0 0%, #b8f24a 35%, #4d9a12 60%, #1f4a06 100%);
+  --title-shadow: #061200;
+}
+.ce-th-verre {
+  --c1: #ffffff; --c2: #9fb7c8; --c3: #253540; --glow: rgba(150, 190, 220, 0.3); --bg: rgba(2, 6, 10, 0.88);
+  --rib1: #2a3a46; --rib2: #141e26; --ink: #e8f2fa; --rib-edge: rgba(200, 230, 250, 0.6);
+  --die1: rgba(220, 235, 245, 0.55); --die2: rgba(120, 150, 170, 0.5); --die3: rgba(20, 30, 40, 0.8); --die-edge: #ffffff; --die-ink: #ffffff;
+  --p1: #dff0ff; --p2: #ffffff; --crack: #e8f6ff; --crack-glow: rgba(180, 220, 255, 0.9);
+  --title: linear-gradient(180deg, #ffffff 0%, #dbe9f3 40%, #8aa4b8 60%, #ffffff 100%);
+  --title-shadow: #0a141c;
+}
+.ce-th-neant {
+  --c1: #d9c8ff; --c2: #6b3fd0; --c3: #05010d; --glow: rgba(60, 20, 140, 0.4); --bg: rgba(0, 0, 0, 0.94);
+  --rib1: #160a30; --rib2: #05020e; --ink: #d9c8ff; --rib-edge: rgba(140, 100, 255, 0.6);
+  --die1: #1a0e36; --die2: #08040f; --die3: #000000; --die-edge: #8d6bff; --die-ink: #b9a0ff;
+  --p1: #a98bff; --p2: #ffffff;
+  --title: linear-gradient(180deg, #ffffff 0%, #c7b2ff 35%, #6b3fd0 60%, #1a0a40 100%);
+  --title-shadow: #000000;
+}
+.ce-th-lame {
+  --c1: #f0f0f0; --c2: #9aa3ad; --c3: #3a2a22; --glow: rgba(160, 80, 40, 0.3); --bg: rgba(6, 4, 3, 0.9);
+  --rib1: #3a2a22; --rib2: #1c1410; --ink: #eadfd6; --rib-edge: rgba(180, 100, 60, 0.6);
+  --die1: #5a524c; --die2: #2a2420; --die3: #0a0806; --die-edge: #d8dde2; --die-ink: #f0f0f0;
+  --p1: #ffb070; --p2: #ffffff;
+  --title: linear-gradient(180deg, #ffffff 0%, #c9d0d6 35%, #7a838c 55%, #a0522d 85%, #5a2a14 100%);
+  --title-shadow: #140a06;
+}
+.ce-th-cendres {
+  --c1: #e8e2da; --c2: #8a827a; --c3: #2a2622; --glow: rgba(120, 110, 100, 0.25); --bg: rgba(8, 7, 6, 0.9);
+  --rib1: #3a3530; --rib2: #1e1b18; --ink: #e8e2da; --rib-edge: rgba(200, 190, 180, 0.4);
+  --die1: #4a4540; --die2: #24201c; --die3: #0a0908; --die-edge: #b8aea4; --die-ink: #d8d0c8;
+  --p1: #b8b0a8; --p2: #e8e2da; --smoke: rgba(70, 65, 60, 0.55); --crack: #0a0908; --crack-glow: rgba(255, 120, 40, 0.5);
+  --title: linear-gradient(180deg, #f4f0ea 0%, #c8c0b8 40%, #7a726a 65%, #3a3430 100%);
+  --title-shadow: #000000;
+}
+.ce-th-sang {
+  --c1: #ffb0a8; --c2: #c0101e; --c3: #3a0006; --glow: rgba(150, 0, 20, 0.45); --bg: rgba(10, 0, 2, 0.9);
+  --drip: #8a0612; --drip-glow: rgba(255, 30, 40, 0.5);
+  --title: linear-gradient(180deg, #ffd0c8 0%, #ff3a3a 30%, #b0101e 55%, #4a0008 100%);
+}
+.ce-th-corbeaux {
+  --c1: #d9d4e8; --c2: #5a5470; --c3: #0d0b12; --glow: rgba(150, 140, 185, 0.5); --bg: rgba(2, 2, 4, 0.92);
+  --rib1: #1c1a24; --rib2: #0a090e; --ink: #d9d4e8; --rib-edge: rgba(190, 30, 40, 0.6);
+  --die1: #2a2636; --die2: #100e16; --die3: #000000; --die-edge: #c81e2a; --die-ink: #e8202c;
+  --p1: #0b0a10; --p2: #2a2636; --smoke: rgba(25, 22, 35, 0.6);
+  --title: linear-gradient(180deg, #f0ecf8 0%, #a8a0c0 40%, #4a4460 65%, #c81e2a 100%);
+  --title-shadow: #000000;
+}
+.ce-th-bouffon {
+  --c1: #fff3b0; --c2: #ff5fa2; --c3: #3b1d6e; --glow: rgba(255, 95, 162, 0.3); --bg: rgba(16, 6, 30, 0.86);
+  --rib1: #ffd43b; --rib2: #f0a400; --ink: #3b1d6e; --rib-edge: rgba(59, 29, 110, 0.8);
+  --die1: #ffe680; --die2: #ff5fa2; --die3: #3b1d6e; --die-edge: #ffffff; --die-ink: #3b1d6e;
+  --p1: #ffd43b; --p2: #5fd3ff;
+  --title: linear-gradient(180deg, #fff6c0 0%, #ffd43b 30%, #ff5fa2 55%, #8a3fd6 80%, #5fd3ff 100%);
+  --title-shadow: #22093f;
+}
+
+/* ==========================================================================
+   2. Structure générale
+   ========================================================================== */
+
 .critiques-epiques {
   --ce-dur: 3.5s;
   position: fixed;
@@ -27,6 +199,7 @@
   font-family: "CE Cinzel", "Cinzel", Georgia, serif;
 }
 .critiques-epiques > * { grid-area: 1 / 1; }
+.ce-layer { position: absolute; inset: 0; width: 100%; height: 100%; }
 
 @keyframes ce-overlay {
   0% { opacity: 0; }
@@ -34,106 +207,249 @@
   82% { opacity: 1; }
   100% { opacity: 0; visibility: hidden; }
 }
+@keyframes ce-spin { to { rotate: 360deg; } }
+@keyframes ce-spin-rev { to { rotate: -360deg; } }
+@keyframes ce-fade-in { from { opacity: 0; } }
 
-/* ---------- Vignette ---------- */
-.ce-vignette { position: absolute; inset: 0; }
-.ce-critical .ce-vignette {
+/* ==========================================================================
+   3. Décors
+   ========================================================================== */
+
+.ce-glow {
   background:
-    radial-gradient(ellipse at center, rgba(255, 214, 120, 0.42) 0%, rgba(255, 170, 60, 0.16) 30%, rgba(30, 16, 0, 0.0) 55%),
-    radial-gradient(ellipse at center, transparent 45%, rgba(18, 10, 0, 0.78) 100%);
+    radial-gradient(ellipse at center, var(--glow) 0%, transparent 55%),
+    radial-gradient(ellipse at center, transparent 40%, var(--bg) 100%);
 }
-.ce-fumble .ce-vignette {
-  background:
-    radial-gradient(ellipse at center, rgba(120, 10, 25, 0.38) 0%, rgba(40, 0, 10, 0.55) 40%, rgba(5, 0, 2, 0.9) 100%);
+.ce-dark {
+  background: radial-gradient(ellipse at center, var(--glow) 0%, var(--bg) 70%);
   animation: ce-pulse-dark 1.6s ease-in-out infinite alternate;
 }
 @keyframes ce-pulse-dark { to { filter: brightness(1.25) saturate(1.2); } }
 
-/* ---------- Réussite : rayons divins + éclair ---------- */
 .ce-rays {
   position: absolute;
   width: 220vmax; height: 220vmax;
   left: 50%; top: 50%;
   margin: -110vmax 0 0 -110vmax;
   background: repeating-conic-gradient(from 0deg,
-    rgba(255, 236, 170, 0.0) 0deg 6deg,
-    rgba(255, 220, 130, 0.24) 8deg 10deg,
-    rgba(255, 236, 170, 0.0) 12deg 18deg);
+    transparent 0deg 6deg,
+    color-mix(in srgb, var(--c2) 26%, transparent) 8deg 10deg,
+    transparent 12deg 18deg);
   -webkit-mask-image: radial-gradient(circle, #000 0%, rgba(0, 0, 0, 0.6) 18%, transparent 42%);
           mask-image: radial-gradient(circle, #000 0%, rgba(0, 0, 0, 0.6) 18%, transparent 42%);
   mix-blend-mode: screen;
   animation: ce-spin 14s linear infinite, ce-rays-in 0.9s ease-out both;
 }
 @keyframes ce-rays-in { from { transform: scale(0.2); opacity: 0; } }
+
 .ce-flash {
-  position: absolute; inset: 0;
-  background: radial-gradient(circle, #fffbe6 0%, rgba(255, 236, 170, 0.7) 25%, transparent 60%);
+  background: radial-gradient(circle, var(--c1) 0%, color-mix(in srgb, var(--c2) 70%, transparent) 25%, transparent 60%);
   mix-blend-mode: screen;
   animation: ce-flash 0.8s ease-out forwards;
 }
 @keyframes ce-flash { 0% { opacity: 0; } 12% { opacity: 1; } 100% { opacity: 0; } }
 
-/* ---------- Échec : fissures ---------- */
+/* Aurore (arcane, céleste) */
+.ce-aurora { overflow: hidden; mix-blend-mode: screen; }
+.ce-aurora span {
+  position: absolute; left: -20%; width: 140%; height: 38%;
+  border-radius: 50%;
+  filter: blur(40px);
+  opacity: 0.55;
+  animation: ce-aurora 4s ease-in-out infinite alternate, ce-fade-in 1s ease-out both;
+}
+.ce-aurora span:nth-child(1) { top: 8%; background: linear-gradient(90deg, transparent, var(--c2), var(--p2), transparent); }
+.ce-aurora span:nth-child(2) { top: 26%; background: linear-gradient(90deg, transparent, var(--p2), var(--c2), transparent); animation-duration: 5s, 1.2s; }
+.ce-aurora span:nth-child(3) { bottom: 4%; background: linear-gradient(90deg, transparent, var(--c3), var(--c2), transparent); animation-duration: 6s, 1.4s; }
+@keyframes ce-aurora { 0% { transform: translateX(-8%) skewY(-4deg); } 100% { transform: translateX(8%) skewY(4deg); } }
+
+/* Flammes (dragon, phénix) */
+.ce-flames { overflow: hidden; mix-blend-mode: screen; }
+.ce-flames::before {
+  content: ""; position: absolute; inset: auto 0 0 0; height: 45vh;
+  background: linear-gradient(0deg, color-mix(in srgb, var(--c3) 85%, transparent), transparent);
+}
+.ce-flames span {
+  position: absolute; bottom: -12vh; left: var(--x);
+  width: var(--w); height: var(--h);
+  border-radius: 50% 50% 20% 20% / 70% 70% 30% 30%;
+  background: radial-gradient(ellipse at 50% 85%, var(--c1) 0%, var(--c2) 35%, var(--c3) 70%, transparent 75%);
+  filter: blur(10px);
+  transform-origin: 50% 100%;
+  animation: ce-flame var(--dur) ease-in-out var(--delay) infinite alternate, ce-flame-in 0.8s ease-out both;
+}
+@keyframes ce-flame {
+  0% { transform: scaleY(0.75) scaleX(1.05) skewX(-4deg); opacity: 0.75; }
+  100% { transform: scaleY(1.15) scaleX(0.9) skewX(5deg); opacity: 1; }
+}
+@keyframes ce-flame-in { from { translate: 0 40vh; } }
+
+/* Givre */
+.ce-frost-edge {
+  box-shadow: inset 0 0 12vmin 3vmin color-mix(in srgb, var(--c2) 75%, transparent), inset 0 0 3vmin 1vmin var(--c1);
+  animation: ce-fade-in 0.6s ease-out both;
+}
+.ce-frost { fill: none; stroke: var(--c1); stroke-width: 2.2; stroke-linecap: round; opacity: 0.85;
+  filter: drop-shadow(0 0 4px var(--c2)); }
+.ce-frost path { stroke-dasharray: 500; stroke-dashoffset: 500; animation: ce-draw 0.9s ease-out forwards; animation-delay: calc(var(--i) * 0.02s); }
+@keyframes ce-draw { to { stroke-dashoffset: 0; } }
+
+/* Éclairs */
+.ce-lightning { fill: none; stroke-linecap: round; stroke-linejoin: round; mix-blend-mode: screen; }
+.ce-lightning g { opacity: 0; animation: ce-bolt 1.5s steps(1) infinite; animation-delay: calc(0.05s + var(--i) * 0.37s); }
+.ce-bolt { stroke: #ffffff; stroke-width: 4; }
+.ce-bolt-glow { stroke: var(--c2); stroke-width: 18; filter: blur(8px); }
+@keyframes ce-bolt { 0% { opacity: 1; } 8% { opacity: 0.2; } 14% { opacity: 1; } 30% { opacity: 0; } 100% { opacity: 0; } }
+
+/* Ciel étoilé */
+.ce-starfield span {
+  position: absolute; left: var(--x); top: var(--y);
+  width: var(--s); height: var(--s); border-radius: 50%;
+  background: var(--c1); box-shadow: 0 0 6px var(--c2);
+  animation: ce-twinkle 1.2s ease-in-out var(--delay) infinite alternate, ce-fade-in 1s ease-out both;
+}
+@keyframes ce-twinkle { from { opacity: 0.2; } to { opacity: 1; } }
+
+/* Fissures */
 .ce-cracks {
-  position: absolute; inset: 0; width: 100%; height: 100%;
-  fill: none;
-  stroke: #12030a;
-  stroke-width: 5;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  filter: drop-shadow(0 0 4px rgba(255, 40, 30, 0.95)) drop-shadow(0 0 14px rgba(160, 0, 20, 0.7));
+  fill: none; stroke: var(--crack, #12030a); stroke-width: 5; stroke-linecap: round; stroke-linejoin: round;
+  filter: drop-shadow(0 0 4px var(--crack-glow, rgba(255, 40, 30, 0.95))) drop-shadow(0 0 14px color-mix(in srgb, var(--c3) 70%, transparent));
 }
-.ce-cracks path {
-  stroke-dasharray: 1400;
-  stroke-dashoffset: 1400;
-  animation: ce-crack 0.55s cubic-bezier(.2, .9, .3, 1) forwards;
-  animation-delay: calc(0.12s + var(--i) * 0.025s);
-}
+.ce-cracks path { stroke-dasharray: 1400; stroke-dashoffset: 1400; animation: ce-crack 0.55s cubic-bezier(.2, .9, .3, 1) forwards;
+  animation-delay: calc(0.12s + var(--i) * 0.025s); }
 @keyframes ce-crack { to { stroke-dashoffset: 0; } }
 
-/* ---------- Scène centrale ---------- */
-.ce-stage {
-  position: relative;
-  display: grid;
-  place-items: center;
-  width: min(92vw, 1100px);
+/* Fumée */
+.ce-smoke span {
+  position: absolute; left: var(--x); top: var(--y);
+  width: var(--s); height: var(--s); margin: calc(var(--s) / -2) 0 0 calc(var(--s) / -2);
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--smoke, rgba(60, 15, 90, 0.55)) 0%, transparent 70%);
+  filter: blur(20px);
+  animation: ce-smoke 3s ease-out var(--delay) both;
 }
+@keyframes ce-smoke { from { opacity: 0; transform: scale(0.4); } 30% { opacity: 1; } to { opacity: 0.85; transform: scale(1.3) translateX(var(--dx)); } }
+
+/* Coulures (poison, sang) */
+.ce-drips { fill: var(--drip, #5fae1a); filter: drop-shadow(0 0 10px var(--drip-glow, rgba(150, 255, 40, 0.6))); }
+.ce-drips path { transform-origin: 50% -560px; transform-box: view-box; transform: scaleY(0);
+  animation: ce-drip 1.6s cubic-bezier(.5, 0, .5, 1) forwards; animation-delay: calc(var(--i) * 0.07s); }
+.ce-drips rect { animation: ce-fade-in 0.3s both; }
+@keyframes ce-drip { to { transform: scaleY(1); } }
+
+/* Néant */
+.ce-void { display: grid; place-items: center; }
+.ce-void > span { grid-area: 1 / 1; border-radius: 50%; }
+.ce-void-swirl {
+  width: 160vmax; height: 160vmax;
+  background: repeating-conic-gradient(from 0deg, transparent 0deg 14deg, color-mix(in srgb, var(--c2) 30%, transparent) 20deg 22deg, transparent 28deg 36deg);
+  -webkit-mask-image: radial-gradient(circle, transparent 6%, #000 12%, transparent 55%);
+          mask-image: radial-gradient(circle, transparent 6%, #000 12%, transparent 55%);
+  animation: ce-spin-rev 3.5s linear infinite, ce-void-in 1s ease-out both;
+}
+.ce-void-hole {
+  width: 38vmin; height: 38vmin;
+  background: radial-gradient(circle, #000 55%, color-mix(in srgb, var(--c2) 80%, transparent) 64%, transparent 72%);
+  box-shadow: 0 0 60px 10px color-mix(in srgb, var(--c2) 50%, transparent);
+  transform: translateY(-9vmin);
+  animation: ce-void-in 1.2s cubic-bezier(.2, 1.2, .4, 1) both;
+}
+@keyframes ce-void-in { from { scale: 0; opacity: 0; } }
+
+/* ==========================================================================
+   4. Scène centrale : sceau, dé, titre
+   ========================================================================== */
+
+.ce-stage { position: relative; display: grid; place-items: center; width: min(92vw, 1100px); }
 .ce-stage > * { grid-area: 1 / 1; }
 
-.ce-rings { position: relative; width: min(52vmin, 500px); aspect-ratio: 1; transform: translateY(-9vmin); }
+.ce-rings { position: relative; width: min(46vmin, 440px); aspect-ratio: 1; transform: translateY(-9vmin); }
 .ce-ring { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-.ce-ring-text { font-family: "CE Runic", "Noto Sans Runic", serif; font-size: 26px; letter-spacing: 2px; }
-.ce-ring-line { fill: none; stroke-width: 2; }
+.ce-ring-text { font-family: "CE Runic", "Noto Sans Runic", serif; font-size: 26px; letter-spacing: 2px;
+  fill: var(--c1); filter: drop-shadow(0 0 6px var(--c2)); }
+.ce-ring-line, .ce-sig-line { fill: none; stroke: color-mix(in srgb, var(--c1) 80%, transparent); stroke-width: 2.5;
+  filter: drop-shadow(0 0 4px var(--c2)); }
+.ce-sig-line * { fill: none; }
+.ce-sig-fill { fill: var(--c1); filter: drop-shadow(0 0 5px var(--c2)); }
 .ce-ring-a { animation: ce-spin 22s linear infinite, ce-ring-in 1s ease-out both; }
 .ce-ring-b { animation: ce-spin-rev 16s linear infinite, ce-ring-in 1.2s ease-out both; }
 .ce-ring-b .ce-ring-text { font-size: 20px; }
-@keyframes ce-spin { to { rotate: 360deg; } }
-@keyframes ce-spin-rev { to { rotate: -360deg; } }
+.ce-slow { animation-duration: 40s, 1s; }
 @keyframes ce-ring-in { from { opacity: 0; scale: 0.4; } }
-
-.ce-critical .ce-ring-text { fill: #ffe7a3; filter: drop-shadow(0 0 6px rgba(255, 200, 80, 0.95)); }
-.ce-critical .ce-ring-line { stroke: rgba(255, 220, 140, 0.75); filter: drop-shadow(0 0 4px rgba(255, 200, 80, 0.9)); }
-.ce-fumble .ce-ring-text { fill: #ff5a48; filter: drop-shadow(0 0 6px rgba(255, 30, 20, 0.9)); opacity: 0.85; }
-.ce-fumble .ce-ring-line { stroke: rgba(200, 30, 40, 0.7); }
+.ce-fumble .ce-ring-text { opacity: 0.85; }
 .ce-fumble .ce-rings { animation: ce-flicker 0.18s steps(2) 6 0.2s; }
 @keyframes ce-flicker { 50% { opacity: 0.35; } }
+
+/* Constellation */
+.ce-constellation line { stroke-dasharray: 400; stroke-dashoffset: 400; animation: ce-draw 0.5s ease-out forwards; animation-delay: calc(0.3s + var(--i) * 0.08s); }
+.ce-twinkle { animation: ce-twinkle 0.9s ease-in-out infinite alternate; animation-delay: calc(var(--i) * 0.11s); }
+
+/* Lauriers */
+.ce-laurel { animation: ce-ring-in 0.9s cubic-bezier(.2, 1.3, .4, 1) both; }
+.ce-laurel .ce-sig-fill { fill: var(--c2); }
+.ce-laurel > .ce-sig-fill:last-child { fill: var(--p1); }
+
+/* Ailes du phénix */
+.ce-wings { inset: -40% -70%; width: 240%; height: 180%; }
+.ce-wing .ce-sig-fill { fill: var(--c2); filter: drop-shadow(0 0 10px var(--p1)); }
+.ce-wings { animation: ce-wings-open 1.1s cubic-bezier(.2, 1.2, .4, 1) both; }
+@keyframes ce-wings-open { from { scale: 0.2 0.6; opacity: 0; } }
+
+/* Œil du dragon */
+.ce-dragoneye { inset: -15% -45%; width: 190%; height: 130%; animation: ce-eye-open 1s cubic-bezier(.2, 1, .4, 1) both; }
+.ce-eye-lid { fill: color-mix(in srgb, var(--c3) 80%, #000); }
+.ce-eye-iris { filter: drop-shadow(0 0 20px var(--c2)); }
+@keyframes ce-eye-open { from { scale: 1 0; opacity: 0; } }
+
+/* Crâne */
+.ce-skull { inset: -26%; width: 152%; height: 152%; translate: 0 -19%; animation: ce-skull 1.4s ease-out both; opacity: 0.75; }
+.ce-skull .ce-sig-fill { fill: color-mix(in srgb, var(--c2) 55%, #120018); filter: drop-shadow(0 0 22px var(--p1)); }
+.ce-skull-holes ellipse { fill: #000; filter: drop-shadow(0 0 10px var(--p1)); }
+.ce-skull-holes { fill: #000; }
+.ce-skull-holes .ce-sig-line { stroke: #000; stroke-width: 10; filter: none; }
+@keyframes ce-skull { from { opacity: 0; scale: 1.6; filter: blur(12px); } }
+
+/* Spirale */
+.ce-spiral { animation: ce-spin-rev 6s linear infinite, ce-ring-in 1s ease-out both; }
+
+/* Épée brisée */
+.ce-sword { inset: -10% 0; height: 120%; }
+.ce-sword .ce-sig-fill { fill: var(--c2); stroke: var(--c1); stroke-width: 2; }
+.ce-sword .ce-blade { fill: color-mix(in srgb, var(--c1) 85%, #7a838c); }
+.ce-sword-top { animation: ce-sword-top 1.6s cubic-bezier(.5, 0, .7, .5) 0.6s both; transform-box: view-box; transform-origin: 0 -40px; }
+.ce-sword-bottom { animation: ce-sword-bottom 1.6s cubic-bezier(.5, 0, .7, .5) 0.6s both; transform-box: view-box; transform-origin: 0 -40px; }
+@keyframes ce-sword-top { to { transform: translate(-60px, -20px) rotate(-28deg); } }
+@keyframes ce-sword-bottom { to { transform: translate(70px, 180px) rotate(34deg); opacity: 0.4; } }
+
+/* Étoiles du bouffon */
+.ce-dizzy { position: absolute; left: 50%; top: 4%; width: 0; height: 0; }
+.ce-dizzy-star {
+  position: absolute; font-size: min(5vmin, 44px); line-height: 1; margin: -0.5em;
+  color: var(--p1); text-shadow: 0 0 8px var(--c2);
+  offset-path: ellipse(14vmin 3.5vmin at 0 0);
+  animation: ce-dizzy 1.4s linear infinite;
+  animation-delay: calc(var(--i) * -0.233s);
+}
+@keyframes ce-dizzy { from { offset-distance: 0%; } to { offset-distance: 100%; } }
 
 /* ---------- Dé ---------- */
 .ce-die { width: min(26vmin, 240px); transform: translateY(-9vmin); }
 .ce-die-svg { width: 100%; height: auto; overflow: visible; }
-.ce-die-face { font-family: "Palatino Linotype", "Book Antiqua", Palatino, "Times New Roman", serif; font-weight: 700; font-size: 52px; font-variant-numeric: lining-nums; }
+.ce-die-body { stroke: var(--die-edge); }
+.ce-die-edges { stroke: var(--die-edge); }
+.ce-die-face { font-family: "Palatino Linotype", "Book Antiqua", Palatino, "Times New Roman", serif; font-weight: 700; font-size: 52px;
+  font-variant-numeric: lining-nums; fill: var(--die-ink); }
 .ce-critical .ce-die { animation: ce-die-crit 1.1s cubic-bezier(.2, 1.4, .4, 1) both; }
-.ce-critical .ce-die-svg { filter: drop-shadow(0 0 18px rgba(255, 210, 100, 0.95)) drop-shadow(0 0 50px rgba(255, 170, 40, 0.6)); }
-.ce-critical .ce-die-face { fill: #5a3200; }
+.ce-critical .ce-die-svg { filter: drop-shadow(0 0 18px var(--c2)) drop-shadow(0 0 50px color-mix(in srgb, var(--c2) 60%, transparent)); }
 @keyframes ce-die-crit {
   0% { transform: translateY(-9vmin) scale(0) rotate(-540deg); }
   100% { transform: translateY(-9vmin) scale(1) rotate(0deg); }
 }
 .ce-fumble .ce-die { animation: ce-die-fumble 0.9s cubic-bezier(.5, 0, .7, .4) both; }
-.ce-fumble .ce-die-svg { filter: drop-shadow(0 0 14px rgba(255, 30, 20, 0.8)); }
-.ce-fumble .ce-die-face { fill: #ff3b30; filter: drop-shadow(0 0 4px #ff0000); }
-.ce-die-crack { fill: none; stroke: #ffb199; stroke-width: 2.5; stroke-dasharray: 200; stroke-dashoffset: 200;
-  animation: ce-crack 0.4s ease-out 0.75s forwards; filter: drop-shadow(0 0 3px #ff2a1a); }
+.ce-fumble .ce-die-svg { filter: drop-shadow(0 0 14px var(--die-edge)); }
+.ce-fumble .ce-die-face { filter: drop-shadow(0 0 4px var(--die-edge)); }
+.ce-die-crack { fill: none; stroke: var(--c1); stroke-width: 2.5; stroke-dasharray: 200; stroke-dashoffset: 200;
+  animation: ce-crack 0.4s ease-out 0.75s forwards; filter: drop-shadow(0 0 3px var(--c2)); }
 @keyframes ce-die-fumble {
   0% { transform: translateY(-60vh) rotate(25deg); }
   70% { transform: translateY(-9vmin) rotate(-4deg); }
@@ -141,13 +457,31 @@
   86% { transform: translateY(-9vmin) rotate(-1deg); }
   100% { transform: translateY(-9vmin) rotate(0deg); }
 }
+/* Néant : le dé est aspiré */
+.ce-th-neant .ce-die { animation: ce-die-void 1.6s cubic-bezier(.5, 0, .5, 1) both; }
+@keyframes ce-die-void { from { transform: translateY(-9vmin) scale(2.2) rotate(-200deg); opacity: 0; } to { transform: translateY(-9vmin) scale(0.85) rotate(0); } }
+/* Bouffon : le dé rebondit */
+.ce-th-bouffon .ce-die { animation: ce-die-bounce 1.2s cubic-bezier(.3, 0, .3, 1) both; }
+@keyframes ce-die-bounce {
+  0% { transform: translateY(-60vh) rotate(0); } 40% { transform: translateY(-9vmin) rotate(160deg) scale(1.1, 0.85); }
+  60% { transform: translateY(-22vmin) rotate(250deg); } 80% { transform: translateY(-9vmin) rotate(340deg) scale(1.05, 0.92); }
+  100% { transform: translateY(-9vmin) rotate(360deg); }
+}
 
-/* ---------- Titre et bandeau ---------- */
+/* ---------- Titre, phrase et bandeau ---------- */
 .ce-banner {
-  display: flex; flex-direction: column; align-items: center; gap: 1.2vmin;
-  transform: translateY(24vmin);
+  display: flex; flex-direction: column; align-items: center; gap: 1.1vmin;
+  transform: translateY(27vmin);
   text-align: center;
 }
+.ce-tagline {
+  font-family: "CE Cinzel", "Cinzel", Georgia, serif; font-weight: 700;
+  font-size: clamp(13px, 1.5vw, 24px); letter-spacing: 0.32em; text-transform: uppercase;
+  color: var(--c1);
+  text-shadow: 0 0 10px var(--c2), 0 2px 2px rgba(0, 0, 0, 0.8);
+  animation: ce-tagline 0.8s ease-out 0.15s both;
+}
+@keyframes ce-tagline { from { opacity: 0; letter-spacing: 0.9em; } }
 .ce-title {
   position: relative;
   font-family: "CE Cinzel Decorative", "Cinzel Decorative", Georgia, serif;
@@ -156,19 +490,14 @@
   line-height: 1;
   letter-spacing: 0.03em;
   white-space: nowrap;
-  font-variant-ligatures: none;
-  font-feature-settings: "liga" 0, "dlig" 0, "clig" 0, "calt" 0, "hlig" 0;
-  -webkit-background-clip: text;
-          background-clip: text;
-  color: transparent;
+  background-image: var(--title);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
 }
 .ce-critical .ce-title {
-  background-image: linear-gradient(180deg, #fffbe8 0%, #ffe28a 38%, #c98a1c 52%, #8c5810 60%, #f6d47c 82%, #fff3c4 100%);
-  filter: drop-shadow(0 2px 0 #4a2a00) drop-shadow(0 0 18px rgba(255, 196, 80, 0.85)) drop-shadow(0 0 48px rgba(255, 150, 30, 0.45));
+  filter: drop-shadow(0 2px 0 var(--title-shadow)) drop-shadow(0 0 18px var(--c2)) drop-shadow(0 0 48px color-mix(in srgb, var(--c2) 45%, transparent));
   animation: ce-title-crit 0.9s cubic-bezier(.2, 1.3, .4, 1) 0.25s both;
 }
 .ce-critical .ce-title::after {
-  /* reflet qui balaie les lettres */
   content: attr(data-text);
   position: absolute; inset: 0;
   background: linear-gradient(110deg, transparent 35%, rgba(255, 255, 255, 0.95) 50%, transparent 65%) -150% 0 / 250% 100% no-repeat;
@@ -183,79 +512,165 @@
   font-family: "CE Cinzel", "Cinzel", Georgia, serif;
   font-weight: 700;
   letter-spacing: 0.05em;
-  background-image: linear-gradient(180deg, #ffb3a1 0%, #ff4434 30%, #a00c1c 55%, #3f0310 100%);
-  filter: drop-shadow(0 3px 0 #120006) drop-shadow(0 0 16px rgba(255, 20, 10, 0.75)) drop-shadow(0 0 40px rgba(120, 0, 30, 0.8));
+  filter: drop-shadow(0 3px 0 var(--title-shadow)) drop-shadow(0 0 16px var(--c2)) drop-shadow(0 0 40px color-mix(in srgb, var(--c3) 80%, transparent));
   animation: ce-title-fumble 0.7s cubic-bezier(.6, 0, .4, 1) 0.45s both, ce-jitter 0.08s linear 1.15s 6;
 }
 @keyframes ce-title-fumble {
   0% { opacity: 0; transform: scale(2.4); filter: blur(12px); }
-  70% { opacity: 1; transform: scale(0.96); filter: blur(0) drop-shadow(0 0 16px rgba(255, 20, 10, 0.75)); }
+  70% { opacity: 1; transform: scale(0.96); filter: blur(0) drop-shadow(0 0 16px var(--c2)); }
   100% { transform: scale(1); }
 }
 @keyframes ce-jitter { 50% { transform: translate(2px, -1px) skewX(-2deg); } }
+.ce-th-bouffon .ce-title { animation: ce-title-fumble 0.7s cubic-bezier(.6, 0, .4, 1) 0.45s both, ce-wobble 0.5s ease-in-out 1.15s 4; }
+@keyframes ce-wobble { 25% { transform: rotate(-3deg) scale(1.03); } 75% { transform: rotate(3deg) scale(0.98); } }
 
-/* Bandeau parchemin (nom du personnage + type de jet) */
 .ce-ribbon {
   position: relative;
   display: flex; flex-direction: column; align-items: center; gap: 2px;
   padding: 0.7em 3.2em 0.75em;
   font-size: clamp(14px, 1.6vw, 24px);
+  color: var(--ink);
+  background: linear-gradient(180deg, var(--rib1) 0%, var(--rib2) 100%);
+  box-shadow: inset 0 0 0 2px var(--rib-edge);
   animation: ce-ribbon 0.6s ease-out 0.8s both;
   clip-path: polygon(0 0, 100% 0, calc(100% - 1.4em) 50%, 100% 100%, 0 100%, 1.4em 50%);
+}
+.ce-th-bouffon .ce-ribbon {
+  background: repeating-linear-gradient(90deg, var(--rib1) 0 1.2em, var(--c2) 1.2em 2.4em);
+  color: #2a0f52; text-shadow: 0 0 4px #fff, 0 0 2px #fff;
 }
 .ce-name { font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
 .ce-sub { font-size: 0.78em; letter-spacing: 0.04em; opacity: 0.9; }
 @keyframes ce-ribbon { from { opacity: 0; transform: scaleX(0.2); } }
-.ce-critical .ce-ribbon {
-  color: #3d2304;
-  background: linear-gradient(180deg, #f8e7bf 0%, #e9cf96 55%, #d4b06c 100%);
-  box-shadow: inset 0 0 0 2px rgba(120, 76, 14, 0.55);
-}
-.ce-fumble .ce-ribbon {
-  color: #f1d2c8;
-  background: linear-gradient(180deg, #3b0b14 0%, #22050b 100%);
-  box-shadow: inset 0 0 0 2px rgba(200, 40, 40, 0.55);
-}
 
-/* ---------- Particules ---------- */
+/* ==========================================================================
+   5. Particules : formes
+   ========================================================================== */
+
 .ce-particles { position: absolute; inset: 0; }
-.ce-p {
-  position: absolute;
-  width: var(--s); height: var(--s);
-  border-radius: 50%;
-  opacity: 0;
-}
-.ce-critical .ce-p {
-  left: 50%; top: calc(50% - 9vmin);
-  background: radial-gradient(circle, #fffbe6 0%, #ffd56a 45%, rgba(255, 170, 40, 0) 70%);
-  box-shadow: 0 0 10px 2px rgba(255, 200, 80, 0.8);
-  animation: ce-burst 1.8s cubic-bezier(.1, .7, .3, 1) var(--delay) forwards;
-}
-.ce-critical .ce-star {
-  width: calc(var(--s) * 2.4); height: calc(var(--s) * 2.4);
-  border-radius: 0;
-  box-shadow: none;
-  background: #fff6cf;
+.ce-p { position: absolute; width: var(--s); height: var(--s); opacity: 0; }
+
+.ce-shape-dot { border-radius: 50%;
+  background: radial-gradient(circle, var(--p2) 0%, var(--p1) 45%, transparent 70%);
+  box-shadow: 0 0 10px 2px color-mix(in srgb, var(--p1) 80%, transparent); }
+.ce-shape-star { width: calc(var(--s) * 2.4); height: calc(var(--s) * 2.4); background: var(--p2);
   clip-path: polygon(50% 0, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0 50%, 40% 40%);
-  filter: drop-shadow(0 0 6px #ffd56a);
-}
+  filter: drop-shadow(0 0 6px var(--p1)); }
+.ce-shape-ember { border-radius: 50%; width: calc(var(--s) * 0.8); height: calc(var(--s) * 0.8);
+  background: radial-gradient(circle, var(--p2) 0%, var(--p1) 45%, transparent 70%);
+  box-shadow: 0 0 8px 1px var(--p1); }
+.ce-shape-spark { width: 2px; height: calc(var(--s) * 3.5); border-radius: 2px;
+  background: linear-gradient(var(--p2), var(--p1)); box-shadow: 0 0 6px var(--p1); }
+.ce-shape-flake { width: auto; height: auto; font-size: calc(var(--s) * 2.6); line-height: 1; color: var(--p2);
+  text-shadow: 0 0 8px var(--c2); font-family: "Segoe UI Symbol", "Noto Sans Symbols 2", sans-serif; }
+.ce-shape-leaf { width: calc(var(--s) * 2.6); height: calc(var(--s) * 1.5); border-radius: 0 100% 0 100%;
+  background: linear-gradient(135deg, var(--c2), var(--c3)); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c1) 40%, transparent); }
+.ce-shape-petal { width: calc(var(--s) * 2); height: calc(var(--s) * 1.4); border-radius: 70% 0 70% 0;
+  background: linear-gradient(135deg, var(--p1), color-mix(in srgb, var(--p1) 60%, #000)); }
+.ce-shape-feather { width: calc(var(--s) * 1.3); height: calc(var(--s) * 4.4); border-radius: 100% 0 100% 0 / 100% 0 100% 0;
+  background: linear-gradient(180deg, var(--p2), var(--p1) 60%, var(--c3)); filter: drop-shadow(0 0 4px var(--p1)); }
+.ce-th-corbeaux .ce-shape-feather { background: linear-gradient(180deg, #2a2636, #08070c); filter: none; }
+.ce-shape-bubble { width: calc(var(--s) * 2.2); height: calc(var(--s) * 2.2); border-radius: 50%;
+  border: 2px solid var(--p1);
+  background: radial-gradient(circle at 30% 30%, color-mix(in srgb, var(--p2) 70%, transparent) 0 18%, color-mix(in srgb, var(--p1) 25%, transparent) 40%, transparent 70%); }
+.ce-shape-shard { width: calc(var(--s) * 5); height: calc(var(--s) * 7);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.75), color-mix(in srgb, var(--c2) 35%, transparent));
+  clip-path: polygon(50% 0, 100% 62%, 35% 100%, 0 40%);
+  filter: drop-shadow(0 0 4px var(--c1)); }
+.ce-shape-ash { width: calc(var(--s) * 0.7); height: calc(var(--s) * 0.55); border-radius: 30%;
+  background: var(--p1); opacity: 0.7; }
+.ce-shape-drop { width: calc(var(--s) * 1.5); height: calc(var(--s) * 2.1);
+  border-radius: 50% 50% 50% 50% / 62% 62% 38% 38%;
+  background: radial-gradient(circle at 35% 35%, color-mix(in srgb, var(--c1) 60%, var(--c2)) 0 12%, var(--c2) 40%, var(--c3)); }
+.ce-shape-crow { width: calc(var(--s) * 16); height: auto; color: #050408; filter: drop-shadow(0 0 6px rgba(220, 210, 255, 0.35)); }
+.ce-shape-crow svg { width: 100%; height: auto; fill: currentColor; animation: ce-flap 0.32s ease-in-out infinite alternate; }
+@keyframes ce-flap { to { transform: scaleY(0.35); } }
+.ce-shape-confetti { width: calc(var(--s) * 1.1); height: calc(var(--s) * 2); background: hsl(var(--hue) 90% 62%); }
+
+/* ==========================================================================
+   6. Particules : mouvements
+   ========================================================================== */
+
+.ce-m-burst { left: 50%; top: calc(50% - 9vmin); animation: ce-burst 1.8s cubic-bezier(.1, .7, .3, 1) var(--delay) forwards; }
 @keyframes ce-burst {
   0% { opacity: 1; transform: rotate(var(--a)) translateX(0) scale(1.2); }
   100% { opacity: 0; transform: rotate(var(--a)) translateX(var(--d)) scale(0.3); }
 }
-.ce-fumble .ce-p {
-  left: var(--x); bottom: -2vh;
-  background: radial-gradient(circle, #ffd0a0 0%, #ff4a1c 45%, rgba(120, 0, 0, 0) 70%);
-  box-shadow: 0 0 8px 1px rgba(255, 60, 20, 0.7);
-  animation: ce-ember 2.8s ease-in var(--delay) forwards;
-}
-@keyframes ce-ember {
-  0% { opacity: 0; transform: translate(0, 0); }
-  15% { opacity: 1; }
-  100% { opacity: 0; transform: translate(calc(var(--d) * 0.25), calc(var(--d) * -2.2)); }
+.ce-shape-spark.ce-m-burst { animation-name: ce-burst-spark; }
+@keyframes ce-burst-spark {
+  0% { opacity: 1; transform: rotate(var(--a)) translateY(0) rotate(0); }
+  100% { opacity: 0; transform: rotate(var(--a)) translateY(calc(var(--d) * -1)); }
 }
 
-/* ---------- Secousse de la scène (échec critique) ---------- */
+.ce-m-rise { left: var(--x); bottom: -3vh; animation: ce-rise calc(var(--dur) * 1.1) ease-in var(--delay) forwards; }
+@keyframes ce-rise {
+  0% { opacity: 0; transform: translate(0, 0); }
+  15% { opacity: 1; }
+  100% { opacity: 0; transform: translate(calc(var(--dx) * 0.3), -95vh); }
+}
+
+.ce-m-fall { left: var(--x); top: -6vh; animation: ce-fall var(--dur) ease-in var(--delay) forwards; }
+@keyframes ce-fall {
+  0% { opacity: 0; transform: translate(0, 0) rotate(0); }
+  10% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { opacity: 0; transform: translate(calc(var(--dx) * 0.4), 110vh) rotate(var(--r)); }
+}
+.ce-m-fallspin { left: calc(30vw + var(--x) * 0.4); top: calc(30vh - 9vmin); animation: ce-fallspin calc(var(--dur) * 0.9) cubic-bezier(.3, 0, .8, .6) var(--delay) forwards; }
+@keyframes ce-fallspin {
+  0% { opacity: 0; transform: translate(0, 0) rotate(0) scale(0.6); }
+  8% { opacity: 1; transform: translate(calc(var(--dx) * 0.2), -6vh) rotate(calc(var(--r) * 0.1)) scale(1); }
+  100% { opacity: 0.2; transform: translate(var(--dx), 90vh) rotate(var(--r)); }
+}
+
+.ce-m-swirl { left: -6vw; top: var(--y); animation: ce-swirl calc(var(--dur) * 1.2) ease-in-out var(--delay) forwards; }
+@keyframes ce-swirl {
+  0% { opacity: 0; transform: translate(0, 0) rotate(0); }
+  15% { opacity: 1; }
+  50% { transform: translate(55vw, calc(var(--dx) * -1)) rotate(calc(var(--r) * 0.5)); }
+  100% { opacity: 0; transform: translate(112vw, var(--dx)) rotate(var(--r)); }
+}
+
+.ce-m-orbit { left: 50%; top: calc(50% - 9vmin); animation: ce-orbit 2.6s linear var(--delay) forwards; }
+@keyframes ce-orbit {
+  0% { opacity: 0; transform: rotate(var(--a)) translateX(calc(var(--d) * 0.6)); }
+  15% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { opacity: 0; transform: rotate(calc(var(--a) + 300deg)) translateX(calc(var(--d) * 0.6)); }
+}
+
+.ce-m-twinkle { left: var(--x); top: var(--y); animation: ce-twinkle-p 0.8s ease-in-out var(--delay) infinite alternate; }
+@keyframes ce-twinkle-p { from { opacity: 0; } to { opacity: 1; } }
+
+.ce-m-shoot {
+  left: calc(20vw + var(--x) * 0.8); top: calc(var(--y) * 0.35);
+  width: 22vmin; height: 2px; border-radius: 2px; clip-path: none;
+  background: linear-gradient(90deg, transparent, var(--p2));
+  filter: drop-shadow(0 0 6px var(--p1));
+  rotate: 152deg;
+  animation: ce-shoot 1s ease-in calc(0.4s + var(--delay)) forwards;
+}
+@keyframes ce-shoot { 0% { opacity: 0; transform: translateX(0); } 20% { opacity: 1; } 100% { opacity: 0; transform: translateX(-45vw); } }
+
+.ce-m-implode { left: 50%; top: calc(50% - 9vmin); animation: ce-implode 1.5s cubic-bezier(.6, 0, .9, .6) var(--delay) forwards; }
+@keyframes ce-implode {
+  0% { opacity: 0; transform: rotate(var(--a)) translateX(75vmin) scale(1.6); }
+  20% { opacity: 1; }
+  100% { opacity: 0; transform: rotate(calc(var(--a) + 160deg)) translateX(2vmin) scale(0.2); }
+}
+
+.ce-m-fly { left: -18vw; top: calc(5vh + var(--y) * 0.7); animation: ce-fly calc(var(--dur) * 0.85) linear calc(var(--delay) * 0.5) forwards; }
+@keyframes ce-fly {
+  0% { opacity: 0; transform: translate(0, 0); }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { opacity: 0; transform: translate(130vw, var(--dx)); }
+}
+
+/* ==========================================================================
+   7. Secousse, mouvements réduits, fenêtres
+   ========================================================================== */
+
 #board.ce-shake { animation: ce-board-shake 0.6s cubic-bezier(.36, .07, .19, .97) both; }
 @keyframes ce-board-shake {
   10%, 90% { transform: translate(-2px, 1px); }
@@ -264,19 +679,30 @@
   40%, 60% { transform: translate(9px, -3px); }
 }
 
-/* ---------- Mouvements réduits ---------- */
 .critiques-epiques.ce-reduced .ce-rays,
 .critiques-epiques.ce-reduced .ce-ring-a,
-.critiques-epiques.ce-reduced .ce-ring-b { animation: ce-ring-in 0.6s ease-out both; }
+.critiques-epiques.ce-reduced .ce-ring-b,
+.critiques-epiques.ce-reduced .ce-void-swirl { animation: ce-ring-in 0.6s ease-out both; }
 .critiques-epiques.ce-reduced .ce-title { animation-duration: 0.5s; }
 .critiques-epiques.ce-reduced .ce-title::after,
-.critiques-epiques.ce-reduced .ce-flash { display: none; }
+.critiques-epiques.ce-reduced .ce-flash,
+.critiques-epiques.ce-reduced .ce-lightning { display: none; }
 @media (prefers-reduced-motion: reduce) {
-  .ce-rays, .ce-ring-a, .ce-ring-b { animation: none; }
-  .ce-flash, .ce-critical .ce-title::after { display: none; }
+  .ce-rays, .ce-ring-a, .ce-ring-b, .ce-void-swirl { animation: none; }
+  .ce-flash, .ce-critical .ce-title::after, .ce-lightning { display: none; }
 }
 
-/* ---------- Fenêtre de test ---------- */
 #critiques-epiques-test .window-content { gap: 0.75rem; }
 #critiques-epiques-test .ce-test-buttons { display: flex; gap: 0.5rem; }
 #critiques-epiques-test .ce-test-buttons button { flex: 1; }
+
+#critiques-epiques-themes .window-content { gap: 0.6rem; }
+#critiques-epiques-themes .ce-theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+#critiques-epiques-themes h3 { display: flex; align-items: baseline; gap: 0.4rem; margin: 0 0 0.4rem; border-bottom: 1px solid var(--color-border, #7a7971); }
+#critiques-epiques-themes .ce-all { margin-left: auto; font-size: 0.75rem; font-weight: normal; cursor: pointer; }
+#critiques-epiques-themes ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.2rem; }
+#critiques-epiques-themes .ce-theme-row { display: flex; align-items: center; gap: 0.4rem; }
+#critiques-epiques-themes .ce-theme-row label { flex: 1; display: flex; align-items: center; gap: 0.4rem; }
+#critiques-epiques-themes .ce-theme-row button { flex: 0 0 2rem; height: 1.8rem; padding: 0; }
+
+.ce-th-celeste .ce-aurora span { opacity: 0.13; }

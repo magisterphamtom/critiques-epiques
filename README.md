@@ -2,12 +2,22 @@
 
 Module Foundry VTT (v13 / v14) pour **D&D 5e** (testé avec le système 6.0.6).
 
-Quand un d20 tombe sur une **réussite critique** (20 naturel, ou la valeur critique de l'arme) ou un **échec critique** (1 naturel), un effet plein écran fantasy se déclenche :
+Quand un d20 tombe sur une **réussite critique** (20 naturel, ou la valeur critique de l'arme) ou un **échec critique** (1 naturel), un effet plein écran fantasy se déclenche. **20 visuels** sont tirés au hasard, le même pour tous les joueurs :
 
-- **Réussite critique** : rayons de lumière dorée, cercles de runes tournants, d20 d'or, étincelles, titre doré « Coup critique ! » / « Réussite critique ! », carillon.
-- **Échec critique** : l'écran se fissure, le d20 d'obsidienne tombe et se brise, braises, titre rouge sang « Échec critique ! », secousse de la scène, glas.
-- Bandeau parchemin avec le nom du personnage, le type de jet (attaque, compétence, sauvegarde…) et l'arme utilisée.
-- Jets contre la mort : « Sursaut de vie ! » sur un 20, « Le voile s'assombrit… » sur un 1.
+| Réussites critiques | Échecs critiques |
+|---|---|
+| Lumière divine — rayons dorés, runes | Fissures de sang — l'écran se fend |
+| Éclat arcanique — aurore, hexagramme | Malédiction — crâne spectral, fumée |
+| Souffle du dragon — œil de dragon, flammes | Poison — coulures vertes, bulles |
+| Givre éternel — cristaux de givre, flocons | Verre brisé — éclats qui tombent |
+| Fureur de l'orage — éclairs | Appel du néant — trou noir |
+| Bénédiction sylvestre — couronne de feuilles | Lame brisée — l'épée se rompt |
+| Voûte céleste — constellation, étoiles filantes | Cendres — fumée grise, cendres |
+| Lauriers royaux — couronne de lauriers, pétales | Sang versé — coulures de sang |
+| Envol du phénix — ailes de feu | Nuée de corbeaux — vol de corbeaux |
+| Forge naine — engrenage, étincelles | Bouffon du destin — étoiles, confettis, trombone |
+
+Chaque visuel a son son (synthétisé, aucun fichier) et une phrase d'ambiance. Bandeau parchemin avec le nom du personnage, le type de jet et l'arme. Jets contre la mort : « Sursaut de vie ! » sur un 20, « Le voile s'assombrit… » sur un 1.
 
 Compatible **Dice So Nice!** : l'effet attend que les dés 3D aient fini de rouler.
 Les jets privés ou à l'aveugle ne déclenchent l'effet que chez ceux qui peuvent voir le jet.
@@ -23,6 +33,7 @@ https://github.com/magisterphamtom/critiques-epiques/releases/latest/download/mo
 ## Réglages
 
 **MJ (pour tout le monde)**
+- **Choisir les visuels** : cocher/décocher chacun des 20 visuels, avec un bouton d'aperçu pour chacun
 - Effet sur les réussites critiques / sur les échecs critiques
 - Jets concernés : tous les d20, attaques uniquement, ou attaques + sauvegardes
 - Qui voit l'effet : tous ceux qui voient le jet, ou seulement la personne qui lance
@@ -40,6 +51,8 @@ Un clic sur l'effet le ferme plus tôt.
 ```js
 game.modules.get("critiques-epiques").api.play("critical", { name: "Aria", subtitle: "Attaque · Épée longue" });
 game.modules.get("critiques-epiques").api.play("fumble", { name: "Borin", subtitle: "Jet de sauvegarde" });
+// Forcer un visuel précis : theme: "dragon", "givre", "bouffon"… (liste : api.themes)
+game.modules.get("critiques-epiques").api.play("critical", { theme: "dragon", name: "Aria" });
 ```
 
 ## Crédits

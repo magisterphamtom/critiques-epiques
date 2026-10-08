@@ -77,13 +77,28 @@
         "Name": "Test the effects",
         "Label": "Test",
         "Hint": "Opens a window to preview both effects."
+      },
+      "Themes": {
+        "Name": "Visuals",
+        "Label": "Choose visuals",
+        "Hint": "Enable or disable each of the 20 visuals and preview them. One is picked at random for each critical, the same for every player."
       }
     },
     "Test": {
       "Window": "Epic Criticals — Test",
-      "Text": "Only you see these previews.",
+      "Text": "Only you see these previews. Each click picks a random visual.",
       "Critical": "Critical success",
       "Fumble": "Critical failure"
+    },
+    "Themes": {
+      "Window": "Epic Criticals — Visuals",
+      "Text": "Each critical picks a random visual among the checked ones. Every player sees the same one. Click the eye to preview (only you see it).",
+      "Critical": "Critical successes",
+      "Fumble": "Critical failures",
+      "All": "toggle all",
+      "Preview": "Preview",
+      "Save": "Save",
+      "NoneWarning": "At least one visual must stay enabled: all were re-enabled."
     }
   }
 }

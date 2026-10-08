@@ -77,13 +77,28 @@
         "Name": "Tester les effets",
         "Label": "Tester",
         "Hint": "Ouvre une fenêtre pour voir les deux effets sans lancer de dés."
+      },
+      "Themes": {
+        "Name": "Visuels",
+        "Label": "Choisir les visuels",
+        "Hint": "Activez ou désactivez chacun des 20 visuels et prévisualisez-les. Un visuel est tiré au hasard à chaque critique, le même pour tous les joueurs."
       }
     },
     "Test": {
       "Window": "Critiques Épiques — Test",
-      "Text": "Seul vous voyez ces aperçus : rien n'est envoyé aux autres joueurs.",
+      "Text": "Seul vous voyez ces aperçus : rien n'est envoyé aux autres joueurs. Chaque clic tire un visuel au hasard.",
       "Critical": "Réussite critique",
       "Fumble": "Échec critique"
+    },
+    "Themes": {
+      "Window": "Critiques Épiques — Visuels",
+      "Text": "À chaque critique, un visuel est tiré au hasard parmi ceux qui sont cochés. Tous les joueurs voient le même. Cliquez sur l'œil pour un aperçu (vous seul le voyez).",
+      "Critical": "Réussites critiques",
+      "Fumble": "Échecs critiques",
+      "All": "tout cocher / décocher",
+      "Preview": "Aperçu",
+      "Save": "Enregistrer",
+      "NoneWarning": "Au moins un visuel doit rester actif : tous ont été réactivés."
     }
   }
 }
