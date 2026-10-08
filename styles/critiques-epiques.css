@@ -21,7 +21,7 @@
    --p1/--p2 particules · --title dégradé du titre · --title-shadow contour
    ========================================================================== */
 
-.critiques-epiques {
+.critiques-epiques, .ce-tfx, .ce-chat {
   --c1: #fff6cf; --c2: #f1c35a; --c3: #8a5a12;
   --glow: rgba(255, 200, 90, 0.42); --bg: rgba(18, 10, 0, 0.78);
   --rib1: #f8e7bf; --rib2: #d4b06c; --ink: #3d2304; --rib-edge: rgba(120, 76, 14, 0.55);
@@ -706,3 +706,126 @@
 #critiques-epiques-themes .ce-theme-row button { flex: 0 0 2rem; height: 1.8rem; padding: 0; }
 
 .ce-th-celeste .ce-aurora span { opacity: 0.13; }
+
+/* ==========================================================================
+   8. Portrait du personnage (en transparence derrière le visuel)
+   ========================================================================== */
+
+.ce-portrait {
+  position: absolute; inset: 0;
+  background-repeat: no-repeat;
+  background-size: auto 92%;
+  background-position: 50% 30%;
+  opacity: var(--portrait-opacity, 0.4);
+  -webkit-mask-image: radial-gradient(ellipse 34% 52% at 50% 40%, #000 45%, transparent 100%);
+          mask-image: radial-gradient(ellipse 34% 52% at 50% 40%, #000 45%, transparent 100%);
+  animation: ce-portrait 1.2s ease-out both, ce-portrait-zoom 8s linear both;
+}
+.ce-fumble .ce-portrait { filter: grayscale(0.55) contrast(1.1) brightness(0.8); }
+@keyframes ce-portrait { from { opacity: 0; filter: blur(14px); } }
+@keyframes ce-portrait-zoom { to { scale: 1.08; } }
+.ce-fumble .ce-portrait { animation: ce-portrait 1.2s ease-out both, ce-portrait-sink 6s ease-in both; }
+@keyframes ce-portrait-sink { to { translate: 0 3vh; scale: 0.97; } }
+
+/* ==========================================================================
+   9. Effet autour du jeton (dans le calque HUD, coordonnées de la carte)
+   ========================================================================== */
+
+#hud > .ce-tfx {
+  position: absolute;
+  pointer-events: none;
+  container-type: size;
+  display: grid; place-items: center;
+  z-index: 50;
+  animation: ce-tfx 2.8s ease-out forwards;
+}
+.ce-tfx > * { grid-area: 1 / 1; }
+@keyframes ce-tfx { 0% { opacity: 0; } 8% { opacity: 1; } 75% { opacity: 1; } 100% { opacity: 0; } }
+
+.ce-tfx-glow { width: 70%; height: 70%; border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--c1) 85%, transparent) 0%, var(--glow) 40%, transparent 70%);
+  mix-blend-mode: screen; animation: ce-tfx-glow 1.6s ease-out both; }
+.ce-fumble .ce-tfx-glow { background: radial-gradient(circle, color-mix(in srgb, var(--c3) 90%, transparent) 0%, var(--glow) 45%, transparent 70%);
+  mix-blend-mode: normal; }
+@keyframes ce-tfx-glow { from { scale: 0.2; } 30% { scale: 1.15; } to { scale: 1; } }
+
+.ce-tfx-rays { width: 100%; height: 100%; border-radius: 50%;
+  background: repeating-conic-gradient(from 0deg, transparent 0 8deg, color-mix(in srgb, var(--c2) 55%, transparent) 10deg 12deg, transparent 14deg 22deg);
+  -webkit-mask-image: radial-gradient(circle, #000 15%, transparent 68%); mask-image: radial-gradient(circle, #000 15%, transparent 68%);
+  mix-blend-mode: screen; animation: ce-spin 6s linear infinite, ce-ring-in 0.6s ease-out both; }
+
+.ce-tfx-ring { width: 40%; height: 40%; border-radius: 50%;
+  border: 0.6cqw solid var(--c1); box-shadow: 0 0 3cqw var(--c2), inset 0 0 3cqw var(--c2);
+  animation: ce-tfx-ring 1.1s cubic-bezier(.1, .7, .3, 1) both; }
+.ce-tfx-ring.ce-r2 { animation-delay: 0.25s; border-width: 0.35cqw; }
+.ce-fumble .ce-tfx-ring { border-color: var(--c2); box-shadow: 0 0 3cqw var(--c3); }
+@keyframes ce-tfx-ring { from { scale: 0.2; opacity: 1; } to { scale: 2.4; opacity: 0; } }
+
+.ce-tfx-cracks { width: 100%; height: 100%; fill: none; stroke: var(--crack, #12030a); stroke-width: 2.2; stroke-linecap: round;
+  filter: drop-shadow(0 0 1.5px var(--crack-glow, rgba(255, 40, 30, 0.95))); }
+.ce-tfx-cracks path { stroke-dasharray: 120; stroke-dashoffset: 120; animation: ce-crack 0.5s ease-out forwards; animation-delay: calc(var(--i) * 0.03s); }
+
+.ce-tfx-parts { position: relative; width: 100%; height: 100%; }
+.ce-tfx-p { position: absolute; left: 50%; top: 50%; width: var(--s); height: var(--s); margin: calc(var(--s) / -2);
+  border-radius: 50%; opacity: 0;
+  background: radial-gradient(circle, var(--p2) 0%, var(--p1) 45%, transparent 70%);
+  animation: ce-tfx-burst 1.4s cubic-bezier(.1, .7, .3, 1) var(--delay) forwards; }
+@keyframes ce-tfx-burst {
+  0% { opacity: 1; transform: rotate(var(--a)) translateX(0); }
+  100% { opacity: 0; transform: rotate(var(--a)) translateX(calc(var(--d) * 2.1)); }
+}
+.ce-fumble .ce-tfx-p { animation-name: ce-tfx-fall; }
+@keyframes ce-tfx-fall {
+  0% { opacity: 1; transform: rotate(var(--a)) translateX(calc(var(--d) * 0.5)); }
+  100% { opacity: 0; transform: rotate(var(--a)) translateX(var(--d)) translateY(40%); }
+}
+
+.ce-tfx-label {
+  font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif; font-weight: 700; font-size: 18cqw; line-height: 1;
+  color: var(--c1); -webkit-text-stroke: 0.4cqw var(--title-shadow);
+  text-shadow: 0 0 2cqw var(--c2), 0 0 5cqw var(--c2);
+  animation: ce-tfx-label 2.6s ease-out both;
+}
+.ce-fumble .ce-tfx-label { color: var(--c2); animation-name: ce-tfx-sink; }
+@keyframes ce-tfx-label { 0% { opacity: 0; transform: translateY(0) scale(0.4); } 20% { opacity: 1; transform: translateY(-18cqh) scale(1.1); } 100% { opacity: 0; transform: translateY(-30cqh) scale(1); } }
+@keyframes ce-tfx-sink { 0% { opacity: 0; transform: translateY(-20cqh) scale(1.4); } 25% { opacity: 1; transform: translateY(-14cqh) scale(1); } 100% { opacity: 0; transform: translateY(4cqh) scale(0.9); } }
+
+/* ==========================================================================
+   10. Carte de chat critique
+   ========================================================================== */
+
+.chat-message.ce-chat {
+  box-shadow: 0 0 0 2px var(--c2), 0 0 12px 1px var(--glow) !important;
+}
+.ce-chat .ce-chat-banner {
+  display: flex; align-items: center; gap: 0.4em;
+  margin: 0 0 6px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--c3), color-mix(in srgb, var(--c2) 50%, var(--c3)), var(--c3));
+  border: 1px solid color-mix(in srgb, var(--c1) 70%, transparent);
+  box-shadow: 0 0 8px var(--glow), inset 0 0 8px rgba(0, 0, 0, 0.35);
+  color: #fff;
+  font-family: "CE Cinzel", "Cinzel", Georgia, serif;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9), 0 0 6px var(--c2);
+}
+.ce-chat .ce-chat-icon { color: var(--c1); }
+.ce-chat .ce-chat-theme { margin-left: auto; font-size: 10px; font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; color: var(--c1); }
+.ce-chat .dice-roll .dice-total {
+  box-shadow: 0 0 0 1px var(--c2), 0 0 10px var(--glow) !important;
+  text-shadow: 0 0 6px var(--c2);
+}
+
+/* ==========================================================================
+   11. Fenêtre « Portraits des héros »
+   ========================================================================== */
+
+#critiques-epiques-heroes .ce-heroes { display: flex; flex-direction: column; gap: 0.6rem; max-height: 70vh; overflow-y: auto; }
+#critiques-epiques-heroes fieldset.ce-hero { margin: 0; padding: 0.4rem 0.6rem 0.6rem; }
+#critiques-epiques-heroes legend { display: flex; align-items: center; gap: 0.4rem; font-weight: bold; }
+#critiques-epiques-heroes legend img { width: 28px; height: 28px; object-fit: cover; border-radius: 50%; border: none; }
+#critiques-epiques-heroes .ce-hero-grid { display: grid; grid-template-columns: 11rem 1fr 2rem; gap: 0.3rem 0.5rem; align-items: center; }
+#critiques-epiques-heroes .ce-hero-grid button { height: 1.8rem; padding: 0; }

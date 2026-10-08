@@ -82,6 +82,37 @@
         "Name": "Visuals",
         "Label": "Choose visuals",
         "Hint": "Enable or disable each of the 20 visuals and preview them. One is picked at random for each critical, the same for every player."
+      },
+      "DamageThemes": {
+        "Name": "Visual by damage type",
+        "Hint": "On attacks, the visual follows the damage type (fire → dragon or phoenix, cold → frost…). Otherwise random."
+      },
+      "ChatCard": {
+        "Name": "Critical chat card",
+        "Hint": "The roll message takes the colors of the drawn visual, with a title banner."
+      },
+      "PortraitMode": {
+        "Name": "Character portrait",
+        "Hint": "Image shown translucently behind the visual.",
+        "Auto": "Chosen image, else sheet portrait",
+        "Custom": "Chosen images only",
+        "None": "No portrait"
+      },
+      "PortraitOpacity": {
+        "Name": "Portrait opacity",
+        "Hint": "Higher is more visible."
+      },
+      "Display": {
+        "Name": "Effect display",
+        "Hint": "Full screen, around the token on the map, or both.",
+        "Both": "Full screen then token",
+        "Fullscreen": "Full screen only",
+        "Token": "Token only"
+      },
+      "Heroes": {
+        "Name": "Hero portraits",
+        "Label": "Customize heroes",
+        "Hint": "Image and quote for each player character's criticals and fumbles."
       }
     },
     "Test": {
@@ -99,6 +130,17 @@
       "Preview": "Preview",
       "Save": "Save",
       "NoneWarning": "At least one visual must stay enabled: all were re-enabled."
+    },
+    "Heroes": {
+      "Window": "Epic Criticals — Hero portraits",
+      "Text": "For each player character: an image shown translucently behind the visual, and a quote replacing the tagline. Leave empty to use the sheet portrait.",
+      "Empty": "No player character found.",
+      "CritImg": "Success image",
+      "FumbleImg": "Failure image",
+      "QuoteCrit": "Success quote",
+      "QuoteFumble": "Failure quote",
+      "QuoteCritPh": "e.g. \"For the Shire!\"",
+      "QuoteFumblePh": "e.g. \"I meant to do that…\""
     }
   }
 }

@@ -82,6 +82,37 @@
         "Name": "Visuels",
         "Label": "Choisir les visuels",
         "Hint": "Activez ou désactivez chacun des 20 visuels et prévisualisez-les. Un visuel est tiré au hasard à chaque critique, le même pour tous les joueurs."
+      },
+      "DamageThemes": {
+        "Name": "Visuel selon les dégâts",
+        "Hint": "Sur une attaque, le visuel suit le type de dégâts (feu → dragon ou phénix, froid → givre, foudre → orage, nécrotique → malédiction…). Sinon, tirage au hasard."
+      },
+      "ChatCard": {
+        "Name": "Carte de chat critique",
+        "Hint": "Le message du jet prend les couleurs du visuel tiré, avec un bandeau titre."
+      },
+      "PortraitMode": {
+        "Name": "Portrait du personnage",
+        "Hint": "Image affichée en transparence derrière le visuel.",
+        "Auto": "Image choisie, sinon portrait de la fiche",
+        "Custom": "Seulement les images choisies",
+        "None": "Aucun portrait"
+      },
+      "PortraitOpacity": {
+        "Name": "Opacité du portrait",
+        "Hint": "Plus la valeur est haute, plus le portrait est visible."
+      },
+      "Display": {
+        "Name": "Affichage de l'effet",
+        "Hint": "Plein écran, autour du jeton sur la carte, ou les deux (le jeton s'illumine quand l'effet plein écran se termine).",
+        "Both": "Plein écran puis jeton",
+        "Fullscreen": "Plein écran seulement",
+        "Token": "Jeton seulement"
+      },
+      "Heroes": {
+        "Name": "Portraits des héros",
+        "Label": "Personnaliser les héros",
+        "Hint": "Image et réplique de chaque personnage joueur pour ses réussites et ses échecs critiques."
       }
     },
     "Test": {
@@ -99,6 +130,17 @@
       "Preview": "Aperçu",
       "Save": "Enregistrer",
       "NoneWarning": "Au moins un visuel doit rester actif : tous ont été réactivés."
+    },
+    "Heroes": {
+      "Window": "Critiques Épiques — Portraits des héros",
+      "Text": "Pour chaque personnage joueur : une image affichée en transparence derrière le visuel (réussite et échec), et une réplique qui remplace la phrase d'ambiance. Laissez vide pour utiliser le portrait de la fiche. Les boutons ☀ et ☠ donnent un aperçu avec les valeurs saisies.",
+      "Empty": "Aucun personnage joueur trouvé (acteurs de type personnage possédés par un joueur).",
+      "CritImg": "Image de réussite",
+      "FumbleImg": "Image d'échec",
+      "QuoteCrit": "Réplique de réussite",
+      "QuoteFumble": "Réplique d'échec",
+      "QuoteCritPh": "ex. « Pour la Comté ! »",
+      "QuoteFumblePh": "ex. « Ça, c'était prévu… »"
     }
   }
 }

@@ -380,3 +380,32 @@ export function particlesHtml(specs, reduced) {
   }
   return `<div class="ce-particles">${out.join("")}</div>`;
 }
+
+/* ------------------------------------------------------------------ */
+/*  Effet autour du jeton (sur la carte)                                */
+/* ------------------------------------------------------------------ */
+
+export function tokenFxHtml(kind, face, reduced) {
+  const n = reduced ? 8 : 22;
+  const parts = Array.from({ length: n }, () =>
+    `<span class="ce-tfx-p" style="--a:${f(rand(0, 360))}deg;--d:${f(rand(26, 48))}%;--delay:${f(rand(0, 0.35))}s;--s:${f(rand(3, 8))}%"></span>`).join("");
+  let deco = "";
+  if (kind === "critical") {
+    deco = `<span class="ce-tfx-rays"></span><span class="ce-tfx-ring"></span><span class="ce-tfx-ring ce-r2"></span>`;
+  } else {
+    const lines = [];
+    for (let i = 0; i < 8; i++) {
+      let x = 0, y = 0, a = (i / 8) * Math.PI * 2 + rand(-0.3, 0.3);
+      let d = "M 0 0";
+      for (let k = 0; k < 4; k++) {
+        a += rand(-0.5, 0.5);
+        const len = rand(10, 22);
+        x += Math.cos(a) * len; y += Math.sin(a) * len;
+        d += ` L ${f(x)} ${f(y)}`;
+      }
+      lines.push(`<path d="${d}" style="--i:${i}"/>`);
+    }
+    deco = `<svg class="ce-tfx-cracks" viewBox="-100 -100 200 200" aria-hidden="true">${lines.join("")}</svg><span class="ce-tfx-ring"></span>`;
+  }
+  return `<span class="ce-tfx-glow"></span>${deco}<div class="ce-tfx-parts">${parts}</div><span class="ce-tfx-label">${face}</span>`;
+}

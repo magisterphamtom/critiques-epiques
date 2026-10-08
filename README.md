@@ -17,7 +17,13 @@ Quand un d20 tombe sur une **réussite critique** (20 naturel, ou la valeur crit
 | Envol du phénix — ailes de feu | Nuée de corbeaux — vol de corbeaux |
 | Forge naine — engrenage, étincelles | Bouffon du destin — étoiles, confettis, trombone |
 
-Chaque visuel a son son (synthétisé, aucun fichier) et une phrase d'ambiance. Bandeau parchemin avec le nom du personnage, le type de jet et l'arme. Jets contre la mort : « Sursaut de vie ! » sur un 20, « Le voile s'assombrit… » sur un 1.
+Chaque visuel a son son (synthétisé, aucun fichier) et une phrase d'ambiance.
+
+**Et aussi :**
+- **Visuel selon les dégâts** : une attaque de feu tire le dragon ou le phénix, le froid le givre, la foudre l'orage, le nécrotique la malédiction… (sinon, hasard).
+- **Effet sur le jeton** : éclat de lumière ou fissure autour du jeton sur la carte, qui suit le zoom.
+- **Carte de chat critique** : le message du jet prend les couleurs du visuel, avec un bandeau titre.
+- **Portraits des héros** : chaque personnage joueur peut avoir son image (réussite / échec) en transparence derrière le visuel, et sa réplique. Par défaut, le portrait de la fiche. Bandeau parchemin avec le nom du personnage, le type de jet et l'arme. Jets contre la mort : « Sursaut de vie ! » sur un 20, « Le voile s'assombrit… » sur un 1.
 
 Compatible **Dice So Nice!** : l'effet attend que les dés 3D aient fini de rouler.
 Les jets privés ou à l'aveugle ne déclenchent l'effet que chez ceux qui peuvent voir le jet.
@@ -34,6 +40,8 @@ https://github.com/magisterphamtom/critiques-epiques/releases/latest/download/mo
 
 **MJ (pour tout le monde)**
 - **Choisir les visuels** : cocher/décocher chacun des 20 visuels, avec un bouton d'aperçu pour chacun
+- **Personnaliser les héros** : image de réussite, image d'échec et répliques pour chaque personnage joueur, avec aperçu
+- Visuel selon les dégâts, carte de chat critique, portrait (auto / images choisies / aucun) et son opacité
 - Effet sur les réussites critiques / sur les échecs critiques
 - Jets concernés : tous les d20, attaques uniquement, ou attaques + sauvegardes
 - Qui voit l'effet : tous ceux qui voient le jet, ou seulement la personne qui lance
@@ -41,7 +49,7 @@ https://github.com/magisterphamtom/critiques-epiques/releases/latest/download/mo
 - Son personnalisé pour chaque effet (sinon sons intégrés, synthétisés)
 
 **Chaque joueur**
-- Afficher les effets, volume, durée (2 à 7 s), secousse, mouvements réduits
+- Afficher les effets, affichage (plein écran puis jeton / plein écran / jeton), volume, durée (2 à 7 s), secousse, mouvements réduits
 - Bouton **Tester** pour voir les deux effets sans lancer de dés
 
 Un clic sur l'effet le ferme plus tôt.

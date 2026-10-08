@@ -5,7 +5,7 @@
  */
 
 import { THEMES, hashString } from "./themes.js";
-import { d20Svg, layersHtml, sigilHtml, particlesHtml } from "./effects.js";
+import { d20Svg, layersHtml, sigilHtml, particlesHtml, tokenFxHtml } from "./effects.js";
 import { playSynth } from "./sounds.js";
 
 const MODULE_ID = "critiques-epiques";
@@ -38,7 +38,22 @@ function registerSettings() {
     scope: "world", config: true, type: String, default: "",
     filePicker: "audio" });
 
+  s("damageThemes", { name: L("DamageThemes.Name"), hint: L("DamageThemes.Hint"),
+    scope: "world", config: true, type: Boolean, default: true });
+  s("chatCard", { name: L("ChatCard.Name"), hint: L("ChatCard.Hint"),
+    scope: "world", config: true, type: Boolean, default: true });
+  s("portraitMode", { name: L("PortraitMode.Name"), hint: L("PortraitMode.Hint"),
+    scope: "world", config: true, type: String, default: "auto",
+    choices: { auto: L("PortraitMode.Auto"), custom: L("PortraitMode.Custom"), none: L("PortraitMode.None") } });
+  s("portraitOpacity", { name: L("PortraitOpacity.Name"), hint: L("PortraitOpacity.Hint"),
+    scope: "world", config: true, type: Number, default: 0.4,
+    range: { min: 0.1, max: 0.9, step: 0.05 } });
+  s("heroes", { scope: "world", config: false, type: Object, default: {} });
+
   // --- Préférences de chaque joueur (client) ---
+  s("display", { name: L("Display.Name"), hint: L("Display.Hint"),
+    scope: "client", config: true, type: String, default: "both",
+    choices: { both: L("Display.Both"), fullscreen: L("Display.Fullscreen"), token: L("Display.Token") } });
   s("showEffects", { name: L("ShowEffects.Name"), hint: L("ShowEffects.Hint"),
     scope: "client", config: true, type: Boolean, default: true });
   s("volume", { name: L("Volume.Name"), hint: L("Volume.Hint"),
@@ -58,6 +73,10 @@ function registerSettings() {
   game.settings.registerMenu(MODULE_ID, "themesMenu", {
     name: L("Themes.Name"), label: L("Themes.Label"), hint: L("Themes.Hint"),
     icon: "fa-solid fa-palette", type: ThemesApp, restricted: true
+  });
+  game.settings.registerMenu(MODULE_ID, "heroesMenu", {
+    name: L("Heroes.Name"), label: L("Heroes.Label"), hint: L("Heroes.Hint"),
+    icon: "fa-solid fa-user-shield", type: HeroesApp, restricted: true
   });
   game.settings.registerMenu(MODULE_ID, "testMenu", {
     name: L("Test.Name"), label: L("Test.Label"), hint: L("Test.Hint"),
@@ -119,39 +138,76 @@ function titleFor(kind, type) {
   return game.i18n.localize(type === "attack" ? "CRITEPIQ.Title.attackFumble" : "CRITEPIQ.Title.fumble");
 }
 
+/**
+ * Analyse un message : critique ou échec critique autorisé par les réglages du monde ?
+ * Résultat identique sur tous les clients (sert à l'effet et à la carte de chat).
+ */
+function analyze(message) {
+  const found = findD20(message);
+  if (!found) return null;
+  if (found.kind === "critical" && !get("enableCritical")) return null;
+  if (found.kind === "fumble" && !get("enableFumble")) return null;
+  const type = message.flags?.dnd5e?.roll?.type ?? null;
+  if (!rollTypeAllowed(type)) return null;
+  const info = describe(message, type);
+  if (!get("includeNpc") && info.actor && !info.actor.hasPlayerOwner) return null;
+  const theme = themeForMessage(message, found.kind);
+  return { ...found, type, info, theme };
+}
+
 async function onCreateChatMessage(message) {
   try {
     if (!get("showEffects")) return;
-    const found = findD20(message);
-    if (!found) return;
-    if (found.kind === "critical" && !get("enableCritical")) return;
-    if (found.kind === "fumble" && !get("enableFumble")) return;
-
-    const type = message.flags?.dnd5e?.roll?.type ?? null;
-    if (!rollTypeAllowed(type)) return;
+    const a = analyze(message);
+    if (!a) return;
 
     // Qui voit l'effet : seulement ceux qui voient le jet (ou seulement le lanceur).
     if (!message.isContentVisible) return;
     if (get("audience") === "roller" && message.author?.id !== game.user.id) return;
-
-    const info = describe(message, type);
-    if (!get("includeNpc") && info.actor && !info.actor.hasPlayerOwner) return;
 
     // Attendre la fin des dés 3D (Dice So Nice!) avant de lancer l'effet.
     if (game.dice3d?.waitFor3DAnimationByMessageID) {
       try { await game.dice3d.waitFor3DAnimationByMessageID(message.id); } catch (e) { /* rien */ }
     }
 
-    play(found.kind, {
+    const token = message.getAssociatedToken?.() ?? null;
+    play(a.kind, {
       seed: hashString(message.id),
-      type,
-      title: titleFor(found.kind, type),
-      name: info.name,
-      subtitle: [info.label, info.item].filter(Boolean).join(" · "),
-      face: found.roll.d20?.total ?? (found.kind === "critical" ? 20 : 1)
+      theme: a.theme.id,
+      type: a.type,
+      title: titleFor(a.kind, a.type),
+      name: a.info.name,
+      subtitle: [a.info.label, a.info.item].filter(Boolean).join(" · "),
+      face: a.roll.d20?.total ?? (a.kind === "critical" ? 20 : 1),
+      actorId: a.info.actor?.id,
+      tokenId: token?.parent === canvas.scene ? token.id : null
     });
   } catch (err) {
     console.error(`${MODULE_ID} | Erreur pendant la détection du critique`, err);
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/*  Carte de chat thématique                                            */
+/* ------------------------------------------------------------------ */
+
+function onRenderChatMessage(message, html) {
+  try {
+    if (!get("chatCard") || !message.isContentVisible) return;
+    const el = html instanceof HTMLElement ? html : html?.[0];
+    if (!el || el.querySelector(".ce-chat-banner")) return;
+    const a = analyze(message);
+    if (!a) return;
+    el.classList.add("ce-chat", `ce-${a.kind}`, `ce-th-${a.theme.id}`);
+    const banner = document.createElement("div");
+    banner.className = "ce-chat-banner";
+    banner.innerHTML = `<span class="ce-chat-icon">${a.kind === "critical" ? "✦" : "☠"}</span>
+      <span class="ce-chat-title">${esc(titleFor(a.kind, a.type))}</span>
+      <span class="ce-chat-theme">${esc(a.theme.label)}</span>`;
+    const content = el.querySelector(".message-content") ?? el;
+    content.prepend(banner);
+  } catch (err) {
+    console.error(`${MODULE_ID} | Erreur sur la carte de chat`, err);
   }
 }
 
@@ -163,6 +219,47 @@ export function enabledThemes(kind) {
   const disabled = new Set(get("disabledThemes")?.[kind] ?? []);
   const list = THEMES[kind].filter((t) => !disabled.has(t.id));
   return list.length ? list : THEMES[kind];
+}
+
+/** Thèmes suggérés par type de dégâts (D&D 5e). */
+const BY_DAMAGE = {
+  critical: {
+    fire: ["dragon", "phenix"], cold: ["givre"], lightning: ["foudre"], thunder: ["foudre"],
+    radiant: ["divin", "celeste"], force: ["arcane"], psychic: ["arcane", "celeste"], necrotic: ["arcane"],
+    acid: ["sylvestre"], poison: ["sylvestre"], healing: ["sylvestre", "divin"], temphp: ["divin"],
+    slashing: ["forge", "royal"], piercing: ["royal", "forge"], bludgeoning: ["forge", "royal"]
+  },
+  fumble: {
+    fire: ["cendres"], cold: ["verre"], lightning: ["fissures"], thunder: ["verre", "fissures"],
+    radiant: ["cendres"], force: ["neant"], psychic: ["neant", "malediction"], necrotic: ["malediction", "corbeaux"],
+    acid: ["poison"], poison: ["poison"], healing: ["bouffon"],
+    slashing: ["lame", "sang"], piercing: ["sang", "corbeaux"], bludgeoning: ["fissures", "bouffon"]
+  }
+};
+
+function damageTypesOf(message) {
+  const types = [];
+  try {
+    const activity = message.getAssociatedActivity?.();
+    const add = (part) => { for (const t of part?.types ?? []) types.push(t); };
+    if (activity?.damage?.includeBase) add(activity.item?.system?.damage?.base);
+    for (const part of activity?.damage?.parts ?? []) add(part);
+    for (const part of activity?.healing ? [activity.healing] : []) add(part);
+  } catch (err) { /* pas d'activité associée */ }
+  return types;
+}
+
+/** Thème d'un message : selon les dégâts si possible, sinon au hasard (même graine pour tous). */
+function themeForMessage(message, kind) {
+  const seed = hashString(message.id);
+  if (get("damageThemes")) {
+    const enabled = new Set(enabledThemes(kind).map((th) => th.id));
+    for (const type of damageTypesOf(message)) {
+      const ids = (BY_DAMAGE[kind][type] ?? []).filter((id) => enabled.has(id));
+      if (ids.length) return THEMES[kind].find((th) => th.id === ids[seed % ids.length]);
+    }
+  }
+  return pickTheme(kind, seed);
 }
 
 /** Même graine (id du message) = même thème chez tous les joueurs. */
@@ -182,15 +279,27 @@ const esc = (s) => foundry.utils.escapeHTML(String(s ?? ""));
  * Joue l'effet. Accessible aux macros :
  *   game.modules.get("critiques-epiques").api.play("critical", {name: "Aria", subtitle: "Attaque", theme: "dragon"})
  */
-export function play(kind = "critical", { title, name = "", subtitle = "", face, theme, seed, type = null } = {}) {
+export function play(kind = "critical", { title, name = "", subtitle = "", face, theme, seed, type = null, actorId = null, tokenId = null, heroOverride = null } = {}) {
   kind = kind === "fumble" ? "fumble" : "critical";
   seed ??= Math.floor(Math.random() * 2 ** 31);
   const th = (theme && THEMES[kind].find((t) => t.id === theme)) || pickTheme(kind, seed);
   title ??= titleFor(kind, type);
   face ??= kind === "critical" ? 20 : 1;
-  const tagline = th.taglines?.length ? th.taglines[(seed >>> 4) % th.taglines.length] : "";
+  const hero = heroFor(actorId, kind, heroOverride);
+  const tagline = hero.quote || (th.taglines?.length ? th.taglines[(seed >>> 4) % th.taglines.length] : "");
   const reduced = get("reducedMotion");
   const duration = Number(get("duration")) || 3.5;
+  const display = get("display");
+
+  // Effet autour du jeton : seul, ou à la fin de l'effet plein écran.
+  if (tokenId && display !== "fullscreen") {
+    const token = canvas.tokens?.get(tokenId);
+    if (token) setTimeout(() => tokenFx(kind, th, token, face, reduced), display === "token" ? 0 : duration * 780);
+  }
+  if (display === "token" && tokenId) {
+    playSound(kind, th.sound);
+    return null;
+  }
 
   current?.remove();
   const el = document.createElement("div");
@@ -198,6 +307,7 @@ export function play(kind = "critical", { title, name = "", subtitle = "", face,
   el.style.setProperty("--ce-dur", `${duration}s`);
   el.innerHTML = `
     ${layersHtml(th.layers)}
+    ${hero.img ? `<div class="ce-portrait" style="background-image:url('${encodeURI(hero.img)}');--portrait-opacity:${Number(get("portraitOpacity")) || 0.4}"></div>` : ""}
     <div class="ce-stage">
       <div class="ce-rings">${sigilHtml(th.sigil)}</div>
       <div class="ce-die">${d20Svg(face, kind)}</div>
@@ -221,6 +331,37 @@ export function play(kind = "critical", { title, name = "", subtitle = "", face,
   el.addEventListener("click", remove);
   setTimeout(remove, duration * 1000 + 200);
   return el;
+}
+
+/** Image et réplique du personnage pour cet effet. */
+function heroFor(actorId, kind, override = null) {
+  const mode = get("portraitMode");
+  const conf = override ?? (get("heroes") ?? {})[actorId] ?? {};
+  const key = kind === "critical" ? "crit" : "fumble";
+  let img = mode === "none" ? "" : (conf[key] || "");
+  if (!img && mode === "auto" && actorId) {
+    const actor = game.actors.get(actorId);
+    const art = actor?.img;
+    if (art && !art.startsWith("icons/svg/") && art !== CONST.DEFAULT_TOKEN) img = art;
+  }
+  const quote = (kind === "critical" ? conf.quoteCrit : conf.quoteFumble) || "";
+  return { img, quote };
+}
+
+/** Éclat (ou fissure) autour du jeton, dans le calque HUD qui suit le zoom et le défilement. */
+function tokenFx(kind, th, token, face, reduced) {
+  const hud = document.getElementById("hud");
+  if (!hud || !token?.center) return;
+  const size = Math.max(token.w, token.h) * 3.2;
+  const el = document.createElement("div");
+  el.className = `ce-tfx ce-${kind} ce-th-${th.id}${reduced ? " ce-reduced" : ""}`;
+  Object.assign(el.style, {
+    left: `${token.center.x - size / 2}px`, top: `${token.center.y - size / 2}px`,
+    width: `${size}px`, height: `${size}px`
+  });
+  el.innerHTML = tokenFxHtml(kind, face, reduced);
+  hud.appendChild(el);
+  setTimeout(() => el.remove(), 3000);
 }
 
 function shakeBoard() {
@@ -252,6 +393,15 @@ const { ApplicationV2 } = foundry.applications.api;
 const playerName = () => game.user.character?.name ?? game.user.name;
 const t = (k) => game.i18n.localize(k);
 
+/** Options d'aperçu : personnage du joueur et son jeton s'il est sur la scène. */
+function previewOptions(actor = game.user.character) {
+  const token = actor ? canvas.tokens?.placeables.find((tk) => tk.actor?.id === actor.id) : canvas.tokens?.controlled[0];
+  return {
+    name: actor?.name ?? playerName(), subtitle: t("CRITEPIQ.Type.attack"), type: "attack",
+    actorId: actor?.id ?? token?.actor?.id ?? null, tokenId: token?.id ?? null
+  };
+}
+
 class TestApp extends ApplicationV2 {
   static DEFAULT_OPTIONS = {
     id: "critiques-epiques-test",
@@ -259,8 +409,8 @@ class TestApp extends ApplicationV2 {
     window: { title: "CRITEPIQ.Test.Window", icon: "fa-solid fa-dice-d20" },
     position: { width: 400, height: "auto" },
     actions: {
-      critical: () => play("critical", { name: playerName(), subtitle: t("CRITEPIQ.Type.attack"), type: "attack" }),
-      fumble: () => play("fumble", { name: playerName(), subtitle: t("CRITEPIQ.Type.attack"), type: "attack" })
+      critical: () => play("critical", previewOptions()),
+      fumble: () => play("fumble", previewOptions())
     }
   };
 
@@ -316,7 +466,7 @@ class ThemesApp extends ApplicationV2 {
 
   static #onPreview(event, target) {
     const kind = target.dataset.kind;
-    play(kind, { theme: target.dataset.theme, name: playerName(), subtitle: t("CRITEPIQ.Type.attack"), type: "attack" });
+    play(kind, { ...previewOptions(), theme: target.dataset.theme });
   }
 
   static #onAll(event, target) {
@@ -339,6 +489,78 @@ class ThemesApp extends ApplicationV2 {
   }
 }
 
+class HeroesApp extends ApplicationV2 {
+  static DEFAULT_OPTIONS = {
+    id: "critiques-epiques-heroes",
+    tag: "form",
+    window: { title: "CRITEPIQ.Heroes.Window", icon: "fa-solid fa-user-shield", resizable: true },
+    position: { width: 760, height: "auto" },
+    form: { handler: HeroesApp.#onSubmit, closeOnSubmit: true },
+    actions: { preview: HeroesApp.#onPreview }
+  };
+
+  static actors() {
+    return game.actors.filter((a) => a.type === "character" && a.hasPlayerOwner)
+      .sort((a, b) => a.name.localeCompare(b.name, game.i18n.lang));
+  }
+
+  async _renderHTML() {
+    const heroes = get("heroes") ?? {};
+    const actors = HeroesApp.actors();
+    if (!actors.length) return `<p>${t("CRITEPIQ.Heroes.Empty")}</p>`;
+    const rows = actors.map((a) => {
+      const h = heroes[a.id] ?? {};
+      const owners = game.users.filter((u) => !u.isGM && a.testUserPermission(u, "OWNER")).map((u) => u.name).join(", ");
+      return `<fieldset class="ce-hero">
+        <legend><img src="${esc(a.img)}" alt=""> ${esc(a.name)} ${owners ? `<small>(${esc(owners)})</small>` : ""}</legend>
+        <div class="ce-hero-grid">
+          <label>${t("CRITEPIQ.Heroes.CritImg")}</label>
+          <file-picker name="${a.id}.crit" type="image" value="${esc(h.crit ?? "")}"></file-picker>
+          <button type="button" data-action="preview" data-actor="${a.id}" data-kind="critical" data-tooltip="${t("CRITEPIQ.Themes.Preview")}"><i class="fa-solid fa-sun"></i></button>
+          <label>${t("CRITEPIQ.Heroes.FumbleImg")}</label>
+          <file-picker name="${a.id}.fumble" type="image" value="${esc(h.fumble ?? "")}"></file-picker>
+          <button type="button" data-action="preview" data-actor="${a.id}" data-kind="fumble" data-tooltip="${t("CRITEPIQ.Themes.Preview")}"><i class="fa-solid fa-skull"></i></button>
+          <label>${t("CRITEPIQ.Heroes.QuoteCrit")}</label>
+          <input type="text" name="${a.id}.quoteCrit" value="${esc(h.quoteCrit ?? "")}" placeholder="${t("CRITEPIQ.Heroes.QuoteCritPh")}"><span></span>
+          <label>${t("CRITEPIQ.Heroes.QuoteFumble")}</label>
+          <input type="text" name="${a.id}.quoteFumble" value="${esc(h.quoteFumble ?? "")}" placeholder="${t("CRITEPIQ.Heroes.QuoteFumblePh")}"><span></span>
+        </div></fieldset>`;
+    }).join("");
+    return `<p class="hint">${t("CRITEPIQ.Heroes.Text")}</p>
+      <div class="ce-heroes">${rows}</div>
+      <footer class="form-footer"><button type="submit"><i class="fa-solid fa-floppy-disk"></i> ${t("CRITEPIQ.Themes.Save")}</button></footer>`;
+  }
+
+  _replaceHTML(result, content) {
+    content.innerHTML = result;
+  }
+
+  /** Lit le formulaire tel quel (aperçu avant enregistrement). */
+  #read() {
+    const data = new foundry.applications.ux.FormDataExtended(this.element).object;
+    const heroes = {};
+    for (const [key, value] of Object.entries(data)) {
+      const [id, field] = key.split(".");
+      if (!field) continue;
+      const v = String(value ?? "").trim();
+      if (!v) continue;
+      (heroes[id] ??= {})[field] = v;
+    }
+    return heroes;
+  }
+
+  static async #onPreview(event, target) {
+    const actor = game.actors.get(target.dataset.actor);
+    if (!actor) return;
+    // Aperçu avec les valeurs du formulaire, sans les enregistrer.
+    play(target.dataset.kind, { ...previewOptions(actor), heroOverride: this.#read()[actor.id] ?? {} });
+  }
+
+  static async #onSubmit() {
+    await game.settings.set(MODULE_ID, "heroes", this.#read());
+  }
+}
+
 /* ------------------------------------------------------------------ */
 /*  Initialisation                                                       */
 /* ------------------------------------------------------------------ */
@@ -346,12 +568,10 @@ class ThemesApp extends ApplicationV2 {
 Hooks.once("init", () => {
   registerSettings();
   game.modules.get(MODULE_ID).api = { play, themes: THEMES };
-});
-
-Hooks.once("ready", () => {
   if (game.system.id !== "dnd5e") {
     console.warn(`${MODULE_ID} | Conçu pour D&D 5e : la détection automatique est inactive sur ${game.system.id}.`);
     return;
   }
   Hooks.on("createChatMessage", onCreateChatMessage);
+  Hooks.on("renderChatMessageHTML", onRenderChatMessage);
 });
