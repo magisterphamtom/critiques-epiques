@@ -307,13 +307,13 @@ export function play(kind = "critical", { title, name = "", subtitle = "", face,
   el.style.setProperty("--ce-dur", `${duration}s`);
   el.innerHTML = `
     ${layersHtml(th.layers)}
-    ${hero.img ? `<div class="ce-portrait" style="background-image:url('${encodeURI(hero.img)}');--portrait-opacity:${Number(get("portraitOpacity")) || 0.4}"></div>` : ""}
+    ${hero.imgs.length ? `<div class="ce-portrait" style="--portrait-opacity:${Number(get("portraitOpacity")) || 0.4}"></div>` : ""}
     <div class="ce-stage">
       <div class="ce-rings">${sigilHtml(th.sigil)}</div>
       <div class="ce-die">${d20Svg(face, kind)}</div>
       <div class="ce-banner">
         ${tagline ? `<div class="ce-tagline">${esc(tagline)}</div>` : ""}
-        <div class="ce-title" data-text="${esc(title)}">${esc(title)}</div>
+        <div class="ce-title" data-text="${esc(title)}" style="--len:${Math.max(12, [...title].length)}">${esc(title)}</div>
         ${name || subtitle ? `<div class="ce-ribbon">
           ${name ? `<span class="ce-name">${esc(name)}</span>` : ""}
           ${subtitle ? `<span class="ce-sub">${esc(subtitle)}</span>` : ""}
@@ -323,6 +323,7 @@ export function play(kind = "critical", { title, name = "", subtitle = "", face,
     ${particlesHtml(th.particles, reduced)}`;
   document.body.appendChild(el);
   current = el;
+  if (hero.imgs.length) mountPortrait(el.querySelector(".ce-portrait"), hero.imgs);
 
   if (get("shake") && !reduced && th.shake) shakeBoard();
   playSound(kind, th.sound);
@@ -338,14 +339,45 @@ function heroFor(actorId, kind, override = null) {
   const mode = get("portraitMode");
   const conf = override ?? (get("heroes") ?? {})[actorId] ?? {};
   const key = kind === "critical" ? "crit" : "fumble";
-  let img = mode === "none" ? "" : (conf[key] || "");
-  if (!img && mode === "auto" && actorId) {
+  const imgs = [];
+  if (mode !== "none" && conf[key]) imgs.push(conf[key]);
+  if (mode === "auto" && actorId) {
     const actor = game.actors.get(actorId);
-    const art = actor?.img;
-    if (art && !art.startsWith("icons/svg/") && art !== CONST.DEFAULT_TOKEN) img = art;
+    // Portrait de la fiche, puis image du jeton (en ignorant les icônes par défaut).
+    for (const src of [actor?.img, actor?.prototypeToken?.texture?.src]) {
+      if (src && !isDefaultArt(src) && !imgs.includes(src)) imgs.push(src);
+    }
   }
   const quote = (kind === "critical" ? conf.quoteCrit : conf.quoteFumble) || "";
-  return { img, quote };
+  return { imgs, quote };
+}
+
+function isDefaultArt(src) {
+  return src === CONST.DEFAULT_TOKEN || /(^|\/)icons\/svg\//.test(src) || /mystery-man/i.test(src);
+}
+
+const VIDEO_EXT = /\.(webm|mp4|m4v|ogg)(\?.*)?$/i;
+
+/**
+ * Place le portrait. Le chemin est utilisé tel quel (sans réencodage : les chemins de Foundry
+ * peuvent déjà contenir des %20 ou des accents encodés). Si l'image ne se charge pas, on essaie la suivante.
+ */
+function mountPortrait(container, srcs, index = 0) {
+  if (!container || index >= srcs.length) {
+    container?.remove();
+    return;
+  }
+  const src = srcs[index];
+  const isVideo = VIDEO_EXT.test(src);
+  const media = document.createElement(isVideo ? "video" : "img");
+  if (isVideo) Object.assign(media, { autoplay: true, loop: true, muted: true, playsInline: true });
+  media.addEventListener("error", () => {
+    console.warn(`${MODULE_ID} | Portrait introuvable ou illisible : ${src}`);
+    media.remove();
+    mountPortrait(container, srcs, index + 1);
+  }, { once: true });
+  media.src = src;
+  container.replaceChildren(media);
 }
 
 /** Éclat (ou fissure) autour du jeton, dans le calque HUD qui suit le zoom et le défilement. */

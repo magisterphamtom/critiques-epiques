@@ -1,5 +1,9 @@
 # État — Critiques Épiques
 
+## v1.2.1 (8 octobre 2026)
+- Portraits : affichés via <img>/<video> avec le chemin brut (plus de encodeURI → les chemins avec %20, accents encodés ou apostrophes marchaient mal ; seul un portrait « simple » s'affichait). Repli sur l'image du jeton, avertissement console si aucune image ne charge.
+- Titre : taille adaptée à la longueur (--len), plus de débordement ; scène centrée sur toute la largeur.
+
 ## v1.2.0 (8 octobre 2026)
 - Thème selon le type de dégâts (`BY_DAMAGE` dans main.js, via `message.getAssociatedActivity()`), réglage `damageThemes`.
 - Effet autour du jeton : élément dans `#hud` (coordonnées de la carte), réglage client `display`.

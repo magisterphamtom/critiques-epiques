@@ -360,7 +360,7 @@
    4. Scène centrale : sceau, dé, titre
    ========================================================================== */
 
-.ce-stage { position: relative; display: grid; place-items: center; width: min(92vw, 1100px); }
+.ce-stage { position: relative; display: grid; place-items: center; width: 100vw; }
 .ce-stage > * { grid-area: 1 / 1; }
 
 .ce-rings { position: relative; width: min(46vmin, 440px); aspect-ratio: 1; transform: translateY(-9vmin); }
@@ -486,7 +486,8 @@
   position: relative;
   font-family: "CE Cinzel Decorative", "Cinzel Decorative", Georgia, serif;
   font-weight: 900;
-  font-size: clamp(40px, 7.4vw, 124px);
+  /* La taille s'adapte à la longueur du titre pour ne jamais déborder de l'écran. */
+  font-size: clamp(30px, min(7.4vw, calc(118vw / var(--len, 15))), 124px);
   line-height: 1;
   letter-spacing: 0.03em;
   white-space: nowrap;
@@ -713,13 +714,17 @@
 
 .ce-portrait {
   position: absolute; inset: 0;
-  background-repeat: no-repeat;
-  background-size: auto 92%;
-  background-position: 50% 30%;
+  display: flex; align-items: flex-start; justify-content: center;
   opacity: var(--portrait-opacity, 0.4);
   -webkit-mask-image: radial-gradient(ellipse 34% 52% at 50% 40%, #000 45%, transparent 100%);
           mask-image: radial-gradient(ellipse 34% 52% at 50% 40%, #000 45%, transparent 100%);
   animation: ce-portrait 1.2s ease-out both, ce-portrait-zoom 8s linear both;
+}
+.ce-portrait img, .ce-portrait video {
+  height: 92%; width: auto; max-width: 70%;
+  margin-top: -2vh;
+  object-fit: contain;
+  border: none;
 }
 .ce-fumble .ce-portrait { filter: grayscale(0.55) contrast(1.1) brightness(0.8); }
 @keyframes ce-portrait { from { opacity: 0; filter: blur(14px); } }
