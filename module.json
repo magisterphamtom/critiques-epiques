@@ -55,5 +55,11 @@
   "download": "https://github.com/magisterphamtom/critiques-epiques/releases/download/v1.2.1/module.zip",
   "bugs": "https://github.com/magisterphamtom/critiques-epiques/issues",
   "readme": "https://github.com/magisterphamtom/critiques-epiques/blob/main/README.md",
-  "license": "https://github.com/magisterphamtom/critiques-epiques/blob/main/LICENSE"
+  "license": "https://github.com/magisterphamtom/critiques-epiques/blob/main/LICENSE",
+  "media": [
+    {
+      "type": "cover",
+      "url": "https://raw.githubusercontent.com/magisterphamtom/critiques-epiques/main/.github/banner.png"
+    }
+  ]
 }
