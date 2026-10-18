@@ -1,3 +1,5 @@
+<p align="center"><img src=".github/banner.png" alt="critiques-epiques" width="100%"></p>
+
 # Critiques Épiques
 
 Module Foundry VTT (v13 / v14) pour **D&D 5e** (testé avec le système 6.0.6).
