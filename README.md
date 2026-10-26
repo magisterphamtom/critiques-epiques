@@ -30,6 +30,60 @@ Chaque visuel a son son (synthétisé, aucun fichier) et une phrase d'ambiance.
 Compatible **Dice So Nice!** : l'effet attend que les dés 3D aient fini de rouler.
 Les jets privés ou à l'aveugle ne déclenchent l'effet que chez ceux qui peuvent voir le jet.
 
+## Aperçus
+
+Captures des 20 visuels (le dé, le titre et le bandeau changent avec le personnage et le jet).
+
+### Réussites critiques
+
+<table>
+<tr>
+<td align="center" width="50%"><img src=".github/previews/reussite-divin.jpg" alt="Lumière divine" width="100%"><br><sub><b>Lumière divine</b></sub></td>
+<td align="center" width="50%"><img src=".github/previews/reussite-arcane.jpg" alt="Éclat arcanique" width="100%"><br><sub><b>Éclat arcanique</b></sub></td>
+</tr>
+<tr>
+<td align="center" width="50%"><img src=".github/previews/reussite-dragon.jpg" alt="Souffle du dragon" width="100%"><br><sub><b>Souffle du dragon</b></sub></td>
+<td align="center" width="50%"><img src=".github/previews/reussite-givre.jpg" alt="Givre éternel" width="100%"><br><sub><b>Givre éternel</b></sub></td>
+</tr>
+<tr>
+<td align="center" width="50%"><img src=".github/previews/reussite-foudre.jpg" alt="Fureur de l'orage" width="100%"><br><sub><b>Fureur de l'orage</b></sub></td>
+<td align="center" width="50%"><img src=".github/previews/reussite-sylvestre.jpg" alt="Bénédiction sylvestre" width="100%"><br><sub><b>Bénédiction sylvestre</b></sub></td>
+</tr>
+<tr>
+<td align="center" width="50%"><img src=".github/previews/reussite-celeste.jpg" alt="Voûte céleste" width="100%"><br><sub><b>Voûte céleste</b></sub></td>
+<td align="center" width="50%"><img src=".github/previews/reussite-royal.jpg" alt="Lauriers royaux" width="100%"><br><sub><b>Lauriers royaux</b></sub></td>
+</tr>
+<tr>
+<td align="center" width="50%"><img src=".github/previews/reussite-phenix.jpg" alt="Envol du phénix" width="100%"><br><sub><b>Envol du phénix</b></sub></td>
+<td align="center" width="50%"><img src=".github/previews/reussite-forge.jpg" alt="Forge naine" width="100%"><br><sub><b>Forge naine</b></sub></td>
+</tr>
+</table>
+
+### Échecs critiques
+
+<table>
+<tr>
+<td align="center" width="50%"><img src=".github/previews/echec-fissures.jpg" alt="Fissures de sang" width="100%"><br><sub><b>Fissures de sang</b></sub></td>
+<td align="center" width="50%"><img src=".github/previews/echec-malediction.jpg" alt="Malédiction" width="100%"><br><sub><b>Malédiction</b></sub></td>
+</tr>
+<tr>
+<td align="center" width="50%"><img src=".github/previews/echec-poison.jpg" alt="Poison" width="100%"><br><sub><b>Poison</b></sub></td>
+<td align="center" width="50%"><img src=".github/previews/echec-verre.jpg" alt="Verre brisé" width="100%"><br><sub><b>Verre brisé</b></sub></td>
+</tr>
+<tr>
+<td align="center" width="50%"><img src=".github/previews/echec-neant.jpg" alt="Appel du néant" width="100%"><br><sub><b>Appel du néant</b></sub></td>
+<td align="center" width="50%"><img src=".github/previews/echec-lame.jpg" alt="Lame brisée" width="100%"><br><sub><b>Lame brisée</b></sub></td>
+</tr>
+<tr>
+<td align="center" width="50%"><img src=".github/previews/echec-cendres.jpg" alt="Cendres" width="100%"><br><sub><b>Cendres</b></sub></td>
+<td align="center" width="50%"><img src=".github/previews/echec-sang.jpg" alt="Sang versé" width="100%"><br><sub><b>Sang versé</b></sub></td>
+</tr>
+<tr>
+<td align="center" width="50%"><img src=".github/previews/echec-corbeaux.jpg" alt="Nuée de corbeaux" width="100%"><br><sub><b>Nuée de corbeaux</b></sub></td>
+<td align="center" width="50%"><img src=".github/previews/echec-bouffon.jpg" alt="Bouffon du destin" width="100%"><br><sub><b>Bouffon du destin</b></sub></td>
+</tr>
+</table>
+
 ## Installation
 
 Foundry → Modules complémentaires → Installer un module → coller le lien du manifeste :
